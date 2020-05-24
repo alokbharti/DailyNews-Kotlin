@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/news_fragment">
+    <fragment
+        android:id="@+id/news_fragment"
+        android:name="com.alok.dailynews.ui.news.NewsFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_news" />
+
+    <fragment
+        android:id="@+id/liked_news_fragment"
+        android:name="com.alok.dailynews.ui.liked.LikedNewsFragment"
+        android:label="@string/liked"
+        tools:layout="@layout/fragment_liked_news"/>
+
+</navigation>

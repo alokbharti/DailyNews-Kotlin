@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="xsmall_margin">8sp</dimen>
+    <dimen name="small_margin">10sp</dimen>
+    <dimen name="medium_margin">12dp</dimen>
+    <dimen name="large_margin">14dp</dimen>
+    <dimen name="common_margin">16dp</dimen>
+
+    <!-- Text Size. -->
+    <dimen name="xsmall_text">8sp</dimen>
+    <dimen name="small_text">10sp</dimen>
+    <dimen name="medium_text">12sp</dimen>
+    <dimen name="large_text">14sp</dimen>
+    <dimen name="xlarge_text">16sp</dimen>
+    <dimen name="xxlarge_text">18sp</dimen>
+    <dimen name="xxxlarge_text">22sp</dimen>
+    <dimen name="very_large_text">24sp</dimen>
+</resources>
