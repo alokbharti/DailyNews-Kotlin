@@ -8,6 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import com.alok.dailynews.R
+import com.alok.dailynews.interfaces.onSwipeRight
+import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
 import com.bumptech.glide.Glide
 import com.mindorks.placeholderview.SwipePlaceHolderView
@@ -19,7 +21,8 @@ import com.mindorks.placeholderview.annotations.swipe.*
 
 
 @Layout(R.layout.item_news)
-class NewsCard (private val context:Context, private val newsItem: NewsItem, private val swipePlaceHolderView: SwipePlaceHolderView) {
+class NewsCard (private val context:Context, private val newsItem: NewsItem,
+                private val swipePlaceHolderView: SwipePlaceHolderView, private val swipeRight: onSwipeRight) {
 
     @View(R.id.news_image_iv)
     lateinit var newsImageView: ImageView
@@ -56,15 +59,16 @@ class NewsCard (private val context:Context, private val newsItem: NewsItem, pri
     @SwipeIn
     fun onSwipeIn() {
         Log.d("EVENT", "onSwipedIn")
+        val likedNewsItem = LikedNewsItem(title = newsItem.title, description = newsItem.description,
+            imageUrl = newsItem.imageUrl, newsUrl = newsItem.newsUrl, isBookmarked = 1)
+        swipeRight.onSwipeRight(likedNewsItem)
     }
 
     @SwipeInState
     fun onSwipeInState() {
-        Log.d("EVENT", "onSwipeInState")
     }
 
     @SwipeOutState
     fun onSwipeOutState() {
-        Log.d("EVENT", "onSwipeOutState")
     }
 }

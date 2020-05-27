@@ -51,6 +51,14 @@ dependencies {
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    
+    //for coroutines
+    def coroutine_version = '1.0.0'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
+
+    //for debugging db
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 
     //for navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

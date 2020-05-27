@@ -11,7 +11,7 @@ import com.alok.dailynews.databinding.ItemNewsBinding
 import com.alok.dailynews.models.NewsItem
 import com.bumptech.glide.Glide
 
-class NewsAdapter(var newsArticleList: ArrayList<NewsItem>?, var context: Context) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class NewsAdapter(var newsArticleList: ArrayList<NewsItem>?, var context: Context?) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemNewsBinding: ItemNewsBinding = ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemNewsBinding)
@@ -27,9 +27,9 @@ class NewsAdapter(var newsArticleList: ArrayList<NewsItem>?, var context: Contex
             holder.newsTitle.text = newsItem.title
             holder.newsDesc.text = newsItem.description
             try {
-                Glide.with(context).load(newsItem.imageUrl).into(holder.newsImage)
+                Glide.with(this.context!!).load(newsItem.imageUrl).into(holder.newsImage)
             } catch (exception : Exception){
-                Glide.with(context).load(R.drawable.dailynews).into(holder.newsImage)
+                Glide.with(this.context!!).load(R.drawable.dailynews).into(holder.newsImage)
             }
         }
     }

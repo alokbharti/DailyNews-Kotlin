@@ -2,6 +2,7 @@ package com.alok.dailynews.ui.news
 
 import android.graphics.Point
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alok.dailynews.R
+import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.FragmentNewsBinding
+import com.alok.dailynews.interfaces.onSwipeRight
+import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.utility.Utils
 import com.mindorks.placeholderview.SwipeDecor
 import com.mindorks.placeholderview.SwipePlaceHolderView
 import com.mindorks.placeholderview.SwipeViewBuilder
 
-class NewsFragment : Fragment() {
+class NewsFragment : Fragment(), onSwipeRight {
 
     lateinit var fragmentNewsBinding: FragmentNewsBinding
     lateinit var newsViewModel: NewsViewModel
@@ -29,7 +33,11 @@ class NewsFragment : Fragment() {
         fragmentNewsBinding = FragmentNewsBinding.inflate(layoutInflater)
         val fragmentView = fragmentNewsBinding.root
 
-        newsViewModel = ViewModelProviders.of(this).get(NewsViewModel::class.java)
+        val application = requireNotNull(this.activity).application
+        val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
+        val newsViewModelFactory = NewsViewModelFactory(datasource, application)
+        newsViewModel = ViewModelProviders.of(this, newsViewModelFactory).get(NewsViewModel::class.java)
+
         val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&page=1&apiKey=2012066be1c944409c701878d544b5fc"
         newsItemList = ArrayList()
 
@@ -62,13 +70,17 @@ class NewsFragment : Fragment() {
         return fragmentView
     }
 
-    fun setNewsData(url:String){
+    private fun setNewsData(url:String){
         newsViewModel.getNewsItemList(url).observe(viewLifecycleOwner, Observer { tempNewsItem: ArrayList<NewsItem>? ->
             if (tempNewsItem != null) {
                 for (newsItem: NewsItem in tempNewsItem)
-                    swipeView.addView(NewsCard(requireContext(), newsItem, swipeView))
+                    swipeView.addView(NewsCard(requireContext(), newsItem, swipeView, this))
             }
         })
+    }
+
+    override fun onSwipeRight(likedNewsItem: LikedNewsItem) {
+        newsViewModel.insertLikedNewsItem(likedNewsItem)
     }
 
 }

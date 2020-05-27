@@ -20,5 +20,5 @@ data class LikedNewsItem(
     @ColumnInfo(name = "news_url")
     var newsUrl:String = "Demo news url",
     @ColumnInfo(name = "is_news_bookmarked")
-    var isBookmarked:Boolean = true
+    var isBookmarked: Int = 1 //1 for true and 0 for false
 )
