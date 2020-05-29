@@ -17,7 +17,7 @@ interface NewsDatabaseDao {
     @Update
     fun update(newsItem: LikedNewsItem)
 
-    @Query("SELECT * FROM news_article_liked_table")
+    @Query("SELECT * FROM news_article_liked_table ORDER BY newsId DESC")
     fun getAllLikedNewsItem(): LiveData<List<LikedNewsItem>>
 
     @Query("SELECT * FROM news_article_liked_table WHERE newsId = :id")

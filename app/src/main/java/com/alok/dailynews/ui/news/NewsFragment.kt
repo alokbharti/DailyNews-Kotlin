@@ -82,6 +82,9 @@ class NewsFragment : Fragment(), onSwipeRight {
 
     private fun setNewsData(){
         sharedViewModel.newsItemList.observe(viewLifecycleOwner, Observer { tempNewsItem: ArrayList<NewsItem>? ->
+            //hide loading layout
+            fragmentNewsBinding.loadingLl.visibility = View.GONE
+
             if (tempNewsItem != null) {
                 for (newsItem: NewsItem in tempNewsItem)
                     swipeView.addView(NewsCard(requireContext(), newsItem, swipeView, this))
@@ -89,8 +92,14 @@ class NewsFragment : Fragment(), onSwipeRight {
         })
     }
 
-    override fun onSwipeRight(likedNewsItem: LikedNewsItem) {
-        sharedViewModel.insertLikedNewsItem(likedNewsItem)
+    override fun onSwipeRight(newsItem: NewsItem) {
+        sharedViewModel.removeSwipedArticle(newsItem)
+
+        sharedViewModel.insertLikedNewsItem(newsItem)
+    }
+
+    override fun onSwipeLeft(newsItem: NewsItem) {
+        sharedViewModel.removeSwipedArticle(newsItem)
     }
 
 }

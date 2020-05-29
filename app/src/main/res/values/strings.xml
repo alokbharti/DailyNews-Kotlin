@@ -3,6 +3,5 @@
     <string name="home">Home</string>
     <string name="liked">Liked</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_liked_item_found_message">No liked articles found, you can swipe right your favorite news articles to see it here</string>
 </resources>

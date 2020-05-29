@@ -1,7 +1,10 @@
 package com.alok.dailynews.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -26,12 +29,16 @@ class NewsAdapter(var newsArticleList: ArrayList<NewsItem>?, var context: Contex
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (newsArticleList!=null) {
-            val newsItem: NewsItem = newsArticleList!!.get(position)
+            val newsItem: NewsItem = newsArticleList!![position]
             holder.newsTitle.text = newsItem.title
             holder.newsDesc.text = newsItem.description
             Glide.with(this.context!!).load(newsItem.imageUrl).placeholder(R.drawable.dailynews).into(holder.newsImage)
 
             holder.newsFrameLayout.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+            holder.newsFrameLayout.setOnClickListener {
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(newsItem.newsUrl))
+                context!!.startActivity(browserIntent)
+            }
         }
     }
 

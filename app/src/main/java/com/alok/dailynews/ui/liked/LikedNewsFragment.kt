@@ -41,9 +41,11 @@ class LikedNewsFragment : Fragment() {
         binding.newsRv.setHasFixedSize(false)
         binding.newsRv.adapter = adapter
 
-        likedNewsViewModel.likedNewsItems.observe(viewLifecycleOwner, Observer {tempLikedNewsItems: List<LikedNewsItem>? ->
+        likedNewsViewModel.likedNewsItems.observe(viewLifecycleOwner, Observer {tempLikedNewsItems: List<LikedNewsItem> ->
             Log.d("LikedNewsFragment", "in likedNewsItems observer")
-            if (tempLikedNewsItems != null) {
+            if (tempLikedNewsItems.isNotEmpty()) {
+                binding.noItemsFoundTv.visibility = View.GONE
+                newsItemList.clear()
                 for (likedNewsItem in tempLikedNewsItems){
                     val newsItem = NewsItem(likedNewsItem.title, likedNewsItem.description,
                         likedNewsItem.imageUrl, likedNewsItem.newsUrl, true)
@@ -51,7 +53,8 @@ class LikedNewsFragment : Fragment() {
                     adapter.notifyDataSetChanged()
                 }
             } else {
-                Toast.makeText(context, "No data added", Toast.LENGTH_SHORT).show()
+                binding.noItemsFoundTv.visibility = View.VISIBLE
+                //Toast.makeText(context, "No data added", Toast.LENGTH_SHORT).show()
             }
         })
 

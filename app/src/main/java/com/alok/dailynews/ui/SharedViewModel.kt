@@ -20,7 +20,7 @@ class SharedViewModel(
     private val uiScope = CoroutineScope(Dispatchers.Main+viewModelJob)
     private val newsRepo: NewsRepo = NewsRepo()
     var newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
-    val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&page=1&apiKey=2012066be1c944409c701878d544b5fc"
+    private val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&page=1&apiKey=2012066be1c944409c701878d544b5fc"
 
     init {
         getNewsItemList(imageUrl)
@@ -32,7 +32,14 @@ class SharedViewModel(
         newsItemList = newsRepo.getNewsData(imageUrl)
     }
 
-    fun insertLikedNewsItem(likedNewsItem: LikedNewsItem){
+    fun removeSwipedArticle(newsItem: NewsItem){
+        newsItemList.value!!.remove(newsItem)
+    }
+
+    fun insertLikedNewsItem(newsItem: NewsItem){
+        val likedNewsItem = LikedNewsItem(title = newsItem.title, description = newsItem.description,
+            imageUrl = newsItem.imageUrl, newsUrl = newsItem.newsUrl, isBookmarked = 1)
+
         uiScope.launch {
             insert(likedNewsItem)
         }
@@ -49,7 +56,6 @@ class SharedViewModel(
 
     fun initializeLikedNewsItems() {
         Log.d(TAG, "initializeLikedNewsItem")
-        //likedNewsItems = database.getAllLikedNewsItem()
         uiScope.launch {
             likedNewsItems = getAllData()
         }

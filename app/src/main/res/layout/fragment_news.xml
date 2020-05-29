@@ -1,33 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
+
     <LinearLayout
+        android:id="@+id/loading_ll"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/small_margin"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/cancel_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/ic_baseline_cancel_24"/>
-        <ImageButton
-            android:id="@+id/bookmark_btn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="30dp"
-            android:background="@drawable/ic_baseline_stars_24"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dailynews"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading articles..."
+            android:textSize="@dimen/xxxlarge_text"/>
     </LinearLayout>
-    <com.mindorks.placeholderview.SwipePlaceHolderView
-        android:id="@+id/swipe_view"
+
+    <FrameLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</FrameLayout>
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/common_margin"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/cancel_btn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/ic_baseline_cancel_24"/>
+            <ImageButton
+                android:id="@+id/bookmark_btn"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="30dp"
+                android:background="@drawable/ic_baseline_stars_24"/>
+        </LinearLayout>
+        <com.mindorks.placeholderview.SwipePlaceHolderView
+            android:id="@+id/swipe_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+</LinearLayout>

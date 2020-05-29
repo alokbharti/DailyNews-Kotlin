@@ -48,6 +48,7 @@ class NewsCard (private val context:Context, private val newsItem: NewsItem,
     fun onSwipeOut(){
         Log.d("EVENT", "onSwipedOut");
         swipePlaceHolderView.addView(this)
+        swipeRight.onSwipeLeft(newsItem)
     }
 
 
@@ -59,9 +60,7 @@ class NewsCard (private val context:Context, private val newsItem: NewsItem,
     @SwipeIn
     fun onSwipeIn() {
         Log.d("EVENT", "onSwipedIn")
-        val likedNewsItem = LikedNewsItem(title = newsItem.title, description = newsItem.description,
-            imageUrl = newsItem.imageUrl, newsUrl = newsItem.newsUrl, isBookmarked = 1)
-        swipeRight.onSwipeRight(likedNewsItem)
+        swipeRight.onSwipeRight(newsItem)
     }
 
     @SwipeInState
