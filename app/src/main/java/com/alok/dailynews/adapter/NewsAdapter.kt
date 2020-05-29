@@ -3,6 +3,9 @@ package com.alok.dailynews.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -26,11 +29,9 @@ class NewsAdapter(var newsArticleList: ArrayList<NewsItem>?, var context: Contex
             val newsItem: NewsItem = newsArticleList!!.get(position)
             holder.newsTitle.text = newsItem.title
             holder.newsDesc.text = newsItem.description
-            try {
-                Glide.with(this.context!!).load(newsItem.imageUrl).into(holder.newsImage)
-            } catch (exception : Exception){
-                Glide.with(this.context!!).load(R.drawable.dailynews).into(holder.newsImage)
-            }
+            Glide.with(this.context!!).load(newsItem.imageUrl).placeholder(R.drawable.dailynews).into(holder.newsImage)
+
+            holder.newsFrameLayout.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
         }
     }
 
@@ -38,5 +39,6 @@ class NewsAdapter(var newsArticleList: ArrayList<NewsItem>?, var context: Contex
         val newsTitle: TextView = itemNewsBinding.newsTitleTv
         val newsDesc: TextView = itemNewsBinding.newsDescTv
         val newsImage: ImageView = itemNewsBinding.newsImageIv
+        val newsFrameLayout = itemNewsBinding.newsItemFl
     }
 }

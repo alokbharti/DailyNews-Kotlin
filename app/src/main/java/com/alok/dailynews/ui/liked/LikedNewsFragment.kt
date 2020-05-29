@@ -16,10 +16,12 @@ import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.FragmentLikedNewsBinding
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
+import com.alok.dailynews.ui.SharedViewModelFactory
+import com.alok.dailynews.ui.SharedViewModel
 
 class LikedNewsFragment : Fragment() {
 
-    private lateinit var likedNewsViewModel: LikedNewsViewModel
+    private lateinit var likedNewsViewModel: SharedViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -30,8 +32,8 @@ class LikedNewsFragment : Fragment() {
 
         val application = requireNotNull(this.activity).application
         val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
-        val newsViewModelFactory = LikedNewsViewModelFactory(datasource, application)
-        likedNewsViewModel = ViewModelProviders.of(this, newsViewModelFactory).get(LikedNewsViewModel::class.java)
+        val newsViewModelFactory = SharedViewModelFactory(datasource, application)
+        likedNewsViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(SharedViewModel::class.java)
 
         var newsItemList: ArrayList<NewsItem> = ArrayList()
         var adapter = NewsAdapter(newsItemList, context)

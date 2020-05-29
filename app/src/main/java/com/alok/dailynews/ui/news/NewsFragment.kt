@@ -16,6 +16,8 @@ import com.alok.dailynews.databinding.FragmentNewsBinding
 import com.alok.dailynews.interfaces.onSwipeRight
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
+import com.alok.dailynews.ui.SharedViewModelFactory
+import com.alok.dailynews.ui.SharedViewModel
 import com.alok.dailynews.utility.Utils
 import com.mindorks.placeholderview.SwipeDecor
 import com.mindorks.placeholderview.SwipePlaceHolderView
@@ -23,28 +25,36 @@ import com.mindorks.placeholderview.SwipeViewBuilder
 
 class NewsFragment : Fragment(), onSwipeRight {
 
-    lateinit var fragmentNewsBinding: FragmentNewsBinding
-    lateinit var newsViewModel: NewsViewModel
+    private lateinit var fragmentNewsBinding: FragmentNewsBinding
+    lateinit var sharedViewModel: SharedViewModel
     var newsItemList: ArrayList<NewsItem>? = null
     lateinit var swipeView: SwipePlaceHolderView
+    val TAG: String = "NewsFragment"
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate")
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         fragmentNewsBinding = FragmentNewsBinding.inflate(layoutInflater)
-        val fragmentView = fragmentNewsBinding.root
 
         val application = requireNotNull(this.activity).application
         val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
-        val newsViewModelFactory = NewsViewModelFactory(datasource, application)
-        newsViewModel = ViewModelProviders.of(this, newsViewModelFactory).get(NewsViewModel::class.java)
-
-        val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&page=1&apiKey=2012066be1c944409c701878d544b5fc"
+        val newsViewModelFactory =
+            SharedViewModelFactory(
+                datasource,
+                application
+            )
+        sharedViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(
+            SharedViewModel::class.java)
         newsItemList = ArrayList()
 
         val bottomMargin = Utils.dpToPx(160)
         val windowSize : Point = Utils.getDisplaySize(requireActivity().windowManager)
 
-        swipeView = fragmentNewsBinding.swipeView
+        swipeView = fragmentNewsBinding!!.swipeView
         swipeView.getBuilder<SwipePlaceHolderView, SwipeViewBuilder<SwipePlaceHolderView>>()
             .setDisplayViewCount(3)
             .setSwipeDecor(
@@ -57,7 +67,7 @@ class NewsFragment : Fragment(), onSwipeRight {
                     .setSwipeInMsgLayoutId(R.layout.swipe_in_view)
                     .setSwipeOutMsgLayoutId(R.layout.swipe_out_view))
 
-        setNewsData(imageUrl)
+        setNewsData()
 
         fragmentNewsBinding.bookmarkBtn.setOnClickListener {
             swipeView.doSwipe(true)
@@ -67,11 +77,11 @@ class NewsFragment : Fragment(), onSwipeRight {
             swipeView.doSwipe(false)
         }
 
-        return fragmentView
+        return fragmentNewsBinding.root
     }
 
-    private fun setNewsData(url:String){
-        newsViewModel.getNewsItemList(url).observe(viewLifecycleOwner, Observer { tempNewsItem: ArrayList<NewsItem>? ->
+    private fun setNewsData(){
+        sharedViewModel.newsItemList.observe(viewLifecycleOwner, Observer { tempNewsItem: ArrayList<NewsItem>? ->
             if (tempNewsItem != null) {
                 for (newsItem: NewsItem in tempNewsItem)
                     swipeView.addView(NewsCard(requireContext(), newsItem, swipeView, this))
@@ -80,7 +90,7 @@ class NewsFragment : Fragment(), onSwipeRight {
     }
 
     override fun onSwipeRight(likedNewsItem: LikedNewsItem) {
-        newsViewModel.insertLikedNewsItem(likedNewsItem)
+        sharedViewModel.insertLikedNewsItem(likedNewsItem)
     }
 
 }
