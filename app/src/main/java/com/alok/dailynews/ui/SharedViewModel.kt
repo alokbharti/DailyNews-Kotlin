@@ -9,6 +9,7 @@ import com.alok.dailynews.database.NewsDatabaseDao
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.ui.news.NewsRepo
+import com.alok.dailynews.utility.Constants
 import kotlinx.coroutines.*
 
 class SharedViewModel(
@@ -20,12 +21,14 @@ class SharedViewModel(
     private val uiScope = CoroutineScope(Dispatchers.Main+viewModelJob)
     private val newsRepo: NewsRepo = NewsRepo()
     var newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
-    private val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&page=1&apiKey=2012066be1c944409c701878d544b5fc"
 
     init {
+        val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&apiKey="+Constants.getApiKey()
         getNewsItemList(imageUrl)
         initializeLikedNewsItems()
     }
+
+    external fun getAPIKey(): String
 
     fun getNewsItemList(imageUrl:String) {
         Log.d(TAG, "in getNewsItemList")
@@ -68,15 +71,15 @@ class SharedViewModel(
         }
     }
 
-    fun updateLikedNewsItem(likedNewsItem: LikedNewsItem) {
+    fun deleteLikedNewsItem(likedNewsItem: LikedNewsItem) {
         uiScope.launch {
-            update(likedNewsItem)
+            delete(likedNewsItem)
         }
     }
 
-    private suspend fun update(likedNewsItem: LikedNewsItem) {
+    private suspend fun delete(likedNewsItem: LikedNewsItem) {
         withContext(Dispatchers.IO) {
-            database.update(likedNewsItem)
+            database.delete(likedNewsItem)
         }
     }
 

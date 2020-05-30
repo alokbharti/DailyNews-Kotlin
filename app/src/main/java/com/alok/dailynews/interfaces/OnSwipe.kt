@@ -2,7 +2,7 @@ package com.alok.dailynews.interfaces
 
 import com.alok.dailynews.models.NewsItem
 
-interface onSwipeRight {
+interface OnSwipe {
     fun onSwipeRight(newsItem: NewsItem)
     fun onSwipeLeft(newsItem: NewsItem)
 }

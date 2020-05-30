@@ -11,34 +11,40 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.alok.dailynews.R
 import com.alok.dailynews.databinding.ItemNewsBinding
+import com.alok.dailynews.interfaces.OnDislikeArticle
+import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
 import com.bumptech.glide.Glide
 
-class NewsAdapter(var newsArticleList: ArrayList<NewsItem>?, var context: Context?) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class NewsAdapter(var context: Context?,
+                  var onDislikeArticle: OnDislikeArticle) : ListAdapter<LikedNewsItem, NewsAdapter.ViewHolder>(LikedNewsItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemNewsBinding: ItemNewsBinding = ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemNewsBinding)
     }
 
-    override fun getItemCount(): Int {
-        return newsArticleList?.size ?:0
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (newsArticleList!=null) {
-            val newsItem: NewsItem = newsArticleList!![position]
-            holder.newsTitle.text = newsItem.title
-            holder.newsDesc.text = newsItem.description
-            Glide.with(this.context!!).load(newsItem.imageUrl).placeholder(R.drawable.dailynews).into(holder.newsImage)
+        val newsItem: LikedNewsItem = getItem(position)
+        holder.newsTitle.text = newsItem.title
+        holder.newsDesc.text = newsItem.description
+        Glide.with(this.context!!).load(newsItem.imageUrl).placeholder(R.drawable.dailynews)
+            .into(holder.newsImage)
 
-            holder.newsFrameLayout.layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-            holder.newsFrameLayout.setOnClickListener {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(newsItem.newsUrl))
-                context!!.startActivity(browserIntent)
-            }
+        holder.newsFrameLayout.layoutParams =
+            FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+        holder.newsFrameLayout.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(newsItem.newsUrl))
+            context!!.startActivity(browserIntent)
+        }
+        holder.likeBtn.visibility = View.VISIBLE
+        holder.likeBtn.setOnClickListener {
+            newsItem.isBookmarked = 0
+            onDislikeArticle.onDislike(newsItem)
         }
     }
 
@@ -47,5 +53,17 @@ class NewsAdapter(var newsArticleList: ArrayList<NewsItem>?, var context: Contex
         val newsDesc: TextView = itemNewsBinding.newsDescTv
         val newsImage: ImageView = itemNewsBinding.newsImageIv
         val newsFrameLayout = itemNewsBinding.newsItemFl
+        val likeBtn = itemNewsBinding.likeIb
+    }
+
+    class LikedNewsItemDiffCallback : DiffUtil.ItemCallback<LikedNewsItem>(){
+        override fun areItemsTheSame(oldItem: LikedNewsItem, newItem: LikedNewsItem): Boolean {
+            return oldItem.newsId == newItem.newsId
+        }
+
+        override fun areContentsTheSame(oldItem: LikedNewsItem, newItem: LikedNewsItem): Boolean {
+            return oldItem == newItem
+        }
+
     }
 }

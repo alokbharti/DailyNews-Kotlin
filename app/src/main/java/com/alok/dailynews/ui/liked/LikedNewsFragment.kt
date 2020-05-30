@@ -14,12 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alok.dailynews.adapter.NewsAdapter
 import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.FragmentLikedNewsBinding
+import com.alok.dailynews.interfaces.OnDislikeArticle
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.ui.SharedViewModelFactory
 import com.alok.dailynews.ui.SharedViewModel
 
-class LikedNewsFragment : Fragment() {
+class LikedNewsFragment : Fragment(), OnDislikeArticle {
 
     private lateinit var likedNewsViewModel: SharedViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +36,7 @@ class LikedNewsFragment : Fragment() {
         val newsViewModelFactory = SharedViewModelFactory(datasource, application)
         likedNewsViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(SharedViewModel::class.java)
 
-        var newsItemList: ArrayList<NewsItem> = ArrayList()
-        var adapter = NewsAdapter(newsItemList, context)
+        val adapter = NewsAdapter(context, this)
         binding.newsRv.layoutManager = LinearLayoutManager(context)
         binding.newsRv.setHasFixedSize(false)
         binding.newsRv.adapter = adapter
@@ -45,13 +45,7 @@ class LikedNewsFragment : Fragment() {
             Log.d("LikedNewsFragment", "in likedNewsItems observer")
             if (tempLikedNewsItems.isNotEmpty()) {
                 binding.noItemsFoundTv.visibility = View.GONE
-                newsItemList.clear()
-                for (likedNewsItem in tempLikedNewsItems){
-                    val newsItem = NewsItem(likedNewsItem.title, likedNewsItem.description,
-                        likedNewsItem.imageUrl, likedNewsItem.newsUrl, true)
-                    newsItemList.add(newsItem)
-                    adapter.notifyDataSetChanged()
-                }
+                adapter.submitList(tempLikedNewsItems)
             } else {
                 binding.noItemsFoundTv.visibility = View.VISIBLE
                 //Toast.makeText(context, "No data added", Toast.LENGTH_SHORT).show()
@@ -59,6 +53,10 @@ class LikedNewsFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onDislike(newsItem: LikedNewsItem) {
+        likedNewsViewModel.deleteLikedNewsItem(newsItem)
     }
 
 }

@@ -6,10 +6,8 @@ import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import com.alok.dailynews.R
-import com.alok.dailynews.interfaces.onSwipeRight
-import com.alok.dailynews.models.LikedNewsItem
+import com.alok.dailynews.interfaces.OnSwipe
 import com.alok.dailynews.models.NewsItem
 import com.bumptech.glide.Glide
 import com.mindorks.placeholderview.SwipePlaceHolderView
@@ -22,7 +20,7 @@ import com.mindorks.placeholderview.annotations.swipe.*
 
 @Layout(R.layout.item_news)
 class NewsCard (private val context:Context, private val newsItem: NewsItem,
-                private val swipePlaceHolderView: SwipePlaceHolderView, private val swipeRight: onSwipeRight) {
+                private val swipePlaceHolderView: SwipePlaceHolderView, private val swipe: OnSwipe) {
 
     @View(R.id.news_image_iv)
     lateinit var newsImageView: ImageView
@@ -48,7 +46,7 @@ class NewsCard (private val context:Context, private val newsItem: NewsItem,
     fun onSwipeOut(){
         Log.d("EVENT", "onSwipedOut");
         swipePlaceHolderView.addView(this)
-        swipeRight.onSwipeLeft(newsItem)
+        swipe.onSwipeLeft(newsItem)
     }
 
 
@@ -60,7 +58,7 @@ class NewsCard (private val context:Context, private val newsItem: NewsItem,
     @SwipeIn
     fun onSwipeIn() {
         Log.d("EVENT", "onSwipedIn")
-        swipeRight.onSwipeRight(newsItem)
+        swipe.onSwipeRight(newsItem)
     }
 
     @SwipeInState

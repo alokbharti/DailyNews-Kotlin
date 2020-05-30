@@ -13,8 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.alok.dailynews.R
 import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.FragmentNewsBinding
-import com.alok.dailynews.interfaces.onSwipeRight
-import com.alok.dailynews.models.LikedNewsItem
+import com.alok.dailynews.interfaces.OnSwipe
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.ui.SharedViewModelFactory
 import com.alok.dailynews.ui.SharedViewModel
@@ -23,7 +22,7 @@ import com.mindorks.placeholderview.SwipeDecor
 import com.mindorks.placeholderview.SwipePlaceHolderView
 import com.mindorks.placeholderview.SwipeViewBuilder
 
-class NewsFragment : Fragment(), onSwipeRight {
+class NewsFragment : Fragment(), OnSwipe {
 
     private lateinit var fragmentNewsBinding: FragmentNewsBinding
     lateinit var sharedViewModel: SharedViewModel
@@ -54,7 +53,7 @@ class NewsFragment : Fragment(), onSwipeRight {
         val bottomMargin = Utils.dpToPx(160)
         val windowSize : Point = Utils.getDisplaySize(requireActivity().windowManager)
 
-        swipeView = fragmentNewsBinding!!.swipeView
+        swipeView = fragmentNewsBinding.swipeView
         swipeView.getBuilder<SwipePlaceHolderView, SwipeViewBuilder<SwipePlaceHolderView>>()
             .setDisplayViewCount(3)
             .setSwipeDecor(
@@ -84,8 +83,9 @@ class NewsFragment : Fragment(), onSwipeRight {
         sharedViewModel.newsItemList.observe(viewLifecycleOwner, Observer { tempNewsItem: ArrayList<NewsItem>? ->
             //hide loading layout
             fragmentNewsBinding.loadingLl.visibility = View.GONE
-
+            Log.d(TAG, "in setNewsData")
             if (tempNewsItem != null) {
+                Log.d(TAG, "Number of items ${tempNewsItem.size}")
                 for (newsItem: NewsItem in tempNewsItem)
                     swipeView.addView(NewsCard(requireContext(), newsItem, swipeView, this))
             }
