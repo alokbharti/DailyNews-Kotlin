@@ -26,6 +26,7 @@ class NewsCategoryAdapter(var newsCategoryList : ArrayList<NewsCategoryItem>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var newsCategoryItem = newsCategoryList[position]
         holder.categoryTv.text = newsCategoryItem.newsCategoryName
+        holder.categoryIv.setImageResource(newsCategoryItem.newsCategoryImage)
         if (newsCategoryItem.isSelected){
             holder.categorySlectedIv.visibility = View.VISIBLE
         } else {
@@ -42,6 +43,7 @@ class NewsCategoryAdapter(var newsCategoryList : ArrayList<NewsCategoryItem>,
     class ViewHolder(binding: ItemNewsCategoryBinding): RecyclerView.ViewHolder(binding.root) {
         val categoryTv: TextView = binding.newsCategoryTv
         val categorySlectedIv: ImageView = binding.newsSelectedIv
+        val categoryIv: ImageView = binding.newsCategoryIv
         val categoryCv: CardView = binding.categoryCv
     }
 }

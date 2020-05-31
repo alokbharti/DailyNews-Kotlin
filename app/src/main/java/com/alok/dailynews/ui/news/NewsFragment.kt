@@ -81,6 +81,7 @@ class NewsFragment : Fragment(), OnSwipe {
             val url = "https://newsapi.org/v2/top-headlines?country=in&category=$category&apiKey="+
                     application.baseContext.resources.getString(R.string.news_api_key)
             sharedViewModel.getNewsItemList(imageUrl = url)
+            fragmentNewsBinding.loadingLl.visibility = View.VISIBLE
         }
 
         return fragmentNewsBinding.root

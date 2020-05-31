@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="xsmall_margin">8sp</dimen>
-    <dimen name="small_margin">10sp</dimen>
+    <dimen name="xxsmall_margin">6dp</dimen>
+    <dimen name="xsmall_margin">8dp</dimen>
+    <dimen name="small_margin">10dp</dimen>
     <dimen name="medium_margin">12dp</dimen>
     <dimen name="large_margin">14dp</dimen>
     <dimen name="common_margin">16dp</dimen>
