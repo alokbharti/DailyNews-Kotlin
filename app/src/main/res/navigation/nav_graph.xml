@@ -17,4 +17,23 @@
         android:label="@string/liked"
         tools:layout="@layout/fragment_liked_news"/>
 
+    <fragment
+        android:id="@+id/discover_fragment"
+        android:name="com.alok.dailynews.ui.discover.DiscoverFragment"
+        android:label="@string/discover"
+        tools:layout="@layout/fragment_discover">
+        <action
+            android:id="@+id/action_discoverFragment_to_newsFragment"
+            app:destination="@id/news_fragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="category_selected"
+                app:argType="string"
+                android:defaultValue="@null"
+                app:nullable="true"/>
+        </action>
+    </fragment>
+
 </navigation>

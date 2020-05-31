@@ -8,4 +8,8 @@
         android:id="@+id/liked_news_fragment"
         android:icon="@drawable/ic_baseline_star_24"
         android:title="@string/liked" />
+    <item
+        android:id="@+id/discover_fragment"
+        android:icon="@drawable/ic_baseline_widgets_24"
+        android:title="@string/discover"/>
 </menu>

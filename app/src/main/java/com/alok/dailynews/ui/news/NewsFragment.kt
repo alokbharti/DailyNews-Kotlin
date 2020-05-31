@@ -21,6 +21,7 @@ import com.alok.dailynews.utility.Utils
 import com.mindorks.placeholderview.SwipeDecor
 import com.mindorks.placeholderview.SwipePlaceHolderView
 import com.mindorks.placeholderview.SwipeViewBuilder
+import kotlinx.android.synthetic.main.item_news.*
 
 class NewsFragment : Fragment(), OnSwipe {
 
@@ -46,8 +47,7 @@ class NewsFragment : Fragment(), OnSwipe {
                 datasource,
                 application
             )
-        sharedViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(
-            SharedViewModel::class.java)
+        sharedViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(SharedViewModel::class.java)
         newsItemList = ArrayList()
 
         val bottomMargin = Utils.dpToPx(160)
@@ -76,6 +76,13 @@ class NewsFragment : Fragment(), OnSwipe {
             swipeView.doSwipe(false)
         }
 
+        val category = arguments?.getString("category_selected")
+        if (category!=null){
+            val url = "https://newsapi.org/v2/top-headlines?country=in&category=$category&apiKey="+
+                    application.baseContext.resources.getString(R.string.news_api_key)
+            sharedViewModel.getNewsItemList(imageUrl = url)
+        }
+
         return fragmentNewsBinding.root
     }
 
@@ -83,6 +90,7 @@ class NewsFragment : Fragment(), OnSwipe {
         sharedViewModel.newsItemList.observe(viewLifecycleOwner, Observer { tempNewsItem: ArrayList<NewsItem>? ->
             //hide loading layout
             fragmentNewsBinding.loadingLl.visibility = View.GONE
+            swipeView.removeAllViews()
             Log.d(TAG, "in setNewsData")
             if (tempNewsItem != null) {
                 Log.d(TAG, "Number of items ${tempNewsItem.size}")

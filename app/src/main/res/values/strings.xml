@@ -4,4 +4,7 @@
     <string name="liked">Liked</string>
 
     <string name="no_liked_item_found_message">No liked articles found, you can swipe right your favorite news articles to see it here</string>
+
+    <string name="category">SUGGESTED TOPICS</string>
+    <string name="discover">Discover</string>
 </resources>

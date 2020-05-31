@@ -16,13 +16,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.alok.dailynews.R
 import com.alok.dailynews.databinding.ItemNewsBinding
-import com.alok.dailynews.interfaces.OnDislikeArticle
+import com.alok.dailynews.interfaces.OnCustomClickListener
 import com.alok.dailynews.models.LikedNewsItem
-import com.alok.dailynews.models.NewsItem
 import com.bumptech.glide.Glide
 
 class NewsAdapter(var context: Context?,
-                  var onDislikeArticle: OnDislikeArticle) : ListAdapter<LikedNewsItem, NewsAdapter.ViewHolder>(LikedNewsItemDiffCallback()) {
+                  var onCustomClickListener: OnCustomClickListener<LikedNewsItem>) : ListAdapter<LikedNewsItem, NewsAdapter.ViewHolder>(LikedNewsItemDiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemNewsBinding: ItemNewsBinding = ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemNewsBinding)
@@ -44,7 +43,7 @@ class NewsAdapter(var context: Context?,
         holder.likeBtn.visibility = View.VISIBLE
         holder.likeBtn.setOnClickListener {
             newsItem.isBookmarked = 0
-            onDislikeArticle.onDislike(newsItem)
+            onCustomClickListener.onClick(newsItem)
         }
     }
 

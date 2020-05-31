@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,13 +13,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.alok.dailynews.adapter.NewsAdapter
 import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.FragmentLikedNewsBinding
-import com.alok.dailynews.interfaces.OnDislikeArticle
+import com.alok.dailynews.interfaces.OnCustomClickListener
 import com.alok.dailynews.models.LikedNewsItem
-import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.ui.SharedViewModelFactory
 import com.alok.dailynews.ui.SharedViewModel
 
-class LikedNewsFragment : Fragment(), OnDislikeArticle {
+class LikedNewsFragment : Fragment(), OnCustomClickListener<LikedNewsItem> {
 
     private lateinit var likedNewsViewModel: SharedViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +53,8 @@ class LikedNewsFragment : Fragment(), OnDislikeArticle {
         return binding.root
     }
 
-    override fun onDislike(newsItem: LikedNewsItem) {
-        likedNewsViewModel.deleteLikedNewsItem(newsItem)
+    override fun onClick(obj: LikedNewsItem) {
+        likedNewsViewModel.deleteLikedNewsItem(obj)
     }
 
 }

@@ -31,8 +31,6 @@ class SharedViewModel(
         initializeLikedNewsItems()
     }
 
-    external fun getAPIKey(): String
-
     fun getNewsItemList(imageUrl:String) {
         Log.d(TAG, "in getNewsItemList")
         newsItemList = newsRepo.getNewsData(imageUrl)
