@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.alok.dailynews.BuildConfig
+import com.alok.dailynews.R
 import com.alok.dailynews.database.NewsDatabaseDao
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
@@ -23,7 +25,8 @@ class SharedViewModel(
     var newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
 
     init {
-        val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&apiKey="+Constants.getApiKey()
+        val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&apiKey="+
+                application.baseContext.resources.getString(R.string.news_api_key)
         getNewsItemList(imageUrl)
         initializeLikedNewsItems()
     }
