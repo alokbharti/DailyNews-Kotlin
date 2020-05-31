@@ -17,6 +17,7 @@ import com.alok.dailynews.interfaces.OnSwipe
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.ui.SharedViewModelFactory
 import com.alok.dailynews.ui.SharedViewModel
+import com.alok.dailynews.utility.Constants.Companion.categorySelected
 import com.alok.dailynews.utility.Utils
 import com.mindorks.placeholderview.SwipeDecor
 import com.mindorks.placeholderview.SwipePlaceHolderView
@@ -77,11 +78,13 @@ class NewsFragment : Fragment(), OnSwipe {
         }
 
         val category = arguments?.getString("category_selected")
-        if (category!=null){
+        if (category!=null && !category.equals(categorySelected)){
+            Log.d(TAG, "selected category: $category")
+            categorySelected = category
+            fragmentNewsBinding.loadingLl.visibility = View.VISIBLE
             val url = "https://newsapi.org/v2/top-headlines?country=in&category=$category&apiKey="+
                     application.baseContext.resources.getString(R.string.news_api_key)
             sharedViewModel.getNewsItemList(imageUrl = url)
-            fragmentNewsBinding.loadingLl.visibility = View.VISIBLE
         }
 
         return fragmentNewsBinding.root
@@ -94,10 +97,11 @@ class NewsFragment : Fragment(), OnSwipe {
             swipeView.removeAllViews()
             Log.d(TAG, "in setNewsData")
             if (tempNewsItem != null) {
-                Log.d(TAG, "Number of items ${tempNewsItem.size}")
                 for (newsItem: NewsItem in tempNewsItem)
                     swipeView.addView(NewsCard(requireContext(), newsItem, swipeView, this))
             }
+
+            //Log.d(TAG, "Number of items ${swipeView.childCount}")
         })
     }
 

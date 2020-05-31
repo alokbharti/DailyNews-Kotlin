@@ -51,7 +51,6 @@ class DiscoverFragment : Fragment(), OnCustomClickListener<NewsCategoryItem> {
     }
 
     override fun onClick(obj: NewsCategoryItem) {
-        Constants.categorySelected = obj.newsCategoryName
         val navController = Navigation.findNavController(binding.root)
         navController.navigate(DiscoverFragmentDirections.actionDiscoverFragmentToNewsFragment(obj.newsCategoryName))
     }
