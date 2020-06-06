@@ -5,8 +5,7 @@
   
 ## About
 
-This is an android app which display the latest news article provided by <a href="https://newsapi.org">NewsApi</a>. It has similar design 
-to Tinder. It has following features:
+This is an android app which display the latest news article provided by <a href="https://newsapi.org">NewsApi</a>. It has similar design to Tinder and has following features:
   - Swipe right the cards to bookmark/like it
   - Swipe left to ignore and go to the next one
   - Tap the cards to read more about the article
