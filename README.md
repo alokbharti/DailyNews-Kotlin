@@ -22,6 +22,7 @@ This is an android app which display the latest news article provided by <a href
 - [Coroutines](https://developer.android.com/kotlin/coroutines)
 - [Room](https://developer.android.com/reference/androidx/room/RoomDatabase)
 - [PlaceHolderView](https://github.com/janishar/PlaceHolderView)
+- [RxAndroidNetworking](https://github.com/amitshekhariitbhu/Fast-Android-Networking)
 - [NewsAPI](https://newsapi.org)
 
 ## Instruction to run
