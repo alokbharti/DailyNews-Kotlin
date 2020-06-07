@@ -18,10 +18,21 @@
             android:src="@drawable/dailynews"/>
 
         <TextView
+            android:id="@+id/loading_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading articles..."
             android:textSize="@dimen/xxxlarge_text"/>
+
+        <TextView
+            android:id="@+id/no_data_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/xxxlarge_text"
+            android:text="@string/no_data_text"
+            android:textAlignment="center"
+            android:layout_margin="@dimen/common_margin"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <FrameLayout

@@ -14,8 +14,10 @@ import org.json.JSONObject
 class NewsRepo {
     val TAG = "NewsRepo"
     val newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
+    val newsListCount: MutableLiveData<Int> = MutableLiveData()
 
     fun getNewsData(imageUrl:String): MutableLiveData<ArrayList<NewsItem>> {
+        Log.d(TAG, "image url: $imageUrl")
         Rx2AndroidNetworking.get(imageUrl)
             .setPriority(Priority.LOW)
             .build()
@@ -42,6 +44,8 @@ class NewsRepo {
                             )
                             tempList.add(newsArticle)
                         }
+                        newsListCount.value = tempList.size
+                        Log.d(TAG, "newsArticle size: "+tempList.size)
                         newsItemList.value = tempList
                     }catch(e: JSONException){}
                 }

@@ -8,6 +8,7 @@ import androidx.navigation.ui.NavigationUI
 import com.alok.dailynews.R
 import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.ActivityMainBinding
+import com.alok.dailynews.utility.Constants.Companion.categorySelected
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,6 +35,11 @@ class MainActivity : AppCompatActivity() {
     fun setUpNavigation(){
         val navHostFragment: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         NavigationUI.setupWithNavController(activityMainBinding.bttmNav, navHostFragment.navController)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        categorySelected = "General"
     }
 
 }
