@@ -63,7 +63,9 @@ class NewsFragment : Fragment(), OnSwipe {
 
         swipeView = fragmentNewsBinding.swipeView
         swipeView.getBuilder<SwipePlaceHolderView, SwipeViewBuilder<SwipePlaceHolderView>>()
-            .setDisplayViewCount(3)
+            .setDisplayViewCount(5)
+            .setWidthSwipeDistFactor(8f) // horizontal distance = display width / 8
+            .setHeightSwipeDistFactor(10f) // vertical distance = display height / 10
             .setSwipeDecor(
                 SwipeDecor()
                     .setViewWidth(windowSize.x)
@@ -111,6 +113,10 @@ class NewsFragment : Fragment(), OnSwipe {
     }
 
     private fun setNewsData(){
+
+        swipedOutCount  = 0
+        totalSwipedOutCount.value = swipedOutCount
+
         sharedViewModel.newsItemList.observe(viewLifecycleOwner, Observer { tempNewsItem: ArrayList<NewsItem>? ->
             //hide loading layout
             fragmentNewsBinding.loadingLl.visibility = View.GONE

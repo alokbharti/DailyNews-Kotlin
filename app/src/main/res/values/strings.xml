@@ -8,4 +8,5 @@
     <string name="category">SUGGESTED TOPICS</string>
     <string name="discover">Discover</string>
     <string name="no_data_text">You\'ve read all the latest news, to read more go to Discover tab</string>
+    <string name="search_hint">Search for news</string>
 </resources>
