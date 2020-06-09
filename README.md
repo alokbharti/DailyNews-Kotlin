@@ -24,6 +24,7 @@ This is an android app which display the latest news article provided by <a href
 - [PlaceHolderView](https://github.com/janishar/PlaceHolderView)
 - [RxAndroidNetworking](https://github.com/amitshekhariitbhu/Fast-Android-Networking)
 - [NewsAPI](https://newsapi.org)
+- [Android Jetpack](https://developer.android.com/jetpack)
 
 ## Instruction to run
 Clone this repo and open it in your android studio. Then get an API key from [NewsApi](https://newsapi.org). 
