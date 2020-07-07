@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.alok.dailynews.models.LikedNewsItem
 
-@Database(entities = [LikedNewsItem::class], version = 1, exportSchema = false)
+@Database(entities = [LikedNewsItem::class], version = 2, exportSchema = false)
 abstract class NewsDatabase : RoomDatabase(){
     abstract val newsDatabaseDao: NewsDatabaseDao
 
@@ -22,7 +22,7 @@ abstract class NewsDatabase : RoomDatabase(){
                         NewsDatabase::class.java,
                         "sleep_history_database"
                     )
-                            //TODO: update migration scheme, currently it'll erase all the old data and create a new one
+                         //TODO: update migration scheme, currently it'll erase all the old data and create a new one
                         .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance

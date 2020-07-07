@@ -9,4 +9,14 @@
     <string name="discover">Discover</string>
     <string name="no_data_text">You\'ve read all the latest news, to read more go to Discover tab</string>
     <string name="search_hint">Search for news</string>
+    <string name="graduation">Graduation</string>
+    <string name="email_id">Email-id</string>
+    <string name="image_desc">Say something about the memory in short</string>
+    <string name="disclaimer">By uploading this details, I acknowledge that this will be displayed to
+        the public &amp; the people in the image has no problem with this and my email id can be used for further verification </string>
+    <string name="submit">submit</string>
+    <string name="add_a_memory">Add a memory</string>
+    <string name="cancel">cancel</string>
+    <string name="add_memory_dialog_title">Add your College Memory</string>
+    <string name="refresh">Refresh</string>
 </resources>

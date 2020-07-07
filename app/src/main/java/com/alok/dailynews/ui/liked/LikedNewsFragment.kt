@@ -39,21 +39,22 @@ class LikedNewsFragment : Fragment(), OnCustomClickListener<LikedNewsItem> {
         binding.newsRv.setHasFixedSize(false)
         binding.newsRv.adapter = adapter
 
-        likedNewsViewModel.likedNewsItems.observe(viewLifecycleOwner, Observer {tempLikedNewsItems: List<LikedNewsItem> ->
+        likedNewsViewModel.likedNewsItems.observe(viewLifecycleOwner, Observer {tempLikedNewsItems: List<LikedNewsItem>? ->
             Log.d("LikedNewsFragment", "in likedNewsItems observer")
-            if (tempLikedNewsItems.isNotEmpty()) {
+            if (tempLikedNewsItems != null && tempLikedNewsItems.isNotEmpty()) {
+                Log.d("LikedNewsFragment", "list size ${tempLikedNewsItems.size}")
                 binding.noItemsFoundTv.visibility = View.GONE
-                adapter.submitList(tempLikedNewsItems)
             } else {
                 binding.noItemsFoundTv.visibility = View.VISIBLE
-                //Toast.makeText(context, "No data added", Toast.LENGTH_SHORT).show()
             }
+            adapter.submitList(tempLikedNewsItems)
         })
 
         return binding.root
     }
 
     override fun onClick(obj: LikedNewsItem) {
+        Log.d("LikedNewsFragment", "in onClick of delete")
         likedNewsViewModel.deleteLikedNewsItem(obj)
     }
 

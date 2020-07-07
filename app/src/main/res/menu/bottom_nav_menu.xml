@@ -12,4 +12,8 @@
         android:id="@+id/discover_fragment"
         android:icon="@drawable/ic_baseline_widgets_24"
         android:title="@string/discover"/>
+    <item
+        android:id="@+id/graduation_fragment"
+        android:icon="@drawable/graduation_logo"
+        android:title="@string/graduation"/>
 </menu>

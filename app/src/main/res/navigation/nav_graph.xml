@@ -36,4 +36,10 @@
         </action>
     </fragment>
 
+    <fragment
+        android:id="@+id/graduation_fragment"
+        android:name="com.alok.dailynews.ui.graduation.GraduationFragment"
+        android:label="@string/graduation"
+        tools:layout="@layout/fragment_graduation"/>
+
 </navigation>

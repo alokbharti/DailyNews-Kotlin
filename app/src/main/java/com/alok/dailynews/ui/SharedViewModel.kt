@@ -3,7 +3,6 @@ package com.alok.dailynews.ui
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.alok.dailynews.BuildConfig
 import com.alok.dailynews.R
@@ -11,7 +10,6 @@ import com.alok.dailynews.database.NewsDatabaseDao
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.ui.news.NewsRepo
-import com.alok.dailynews.utility.Constants
 import kotlinx.coroutines.*
 
 class SharedViewModel(
@@ -25,10 +23,9 @@ class SharedViewModel(
     var newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
 
     init {
-        val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&apiKey="+
-                application.baseContext.resources.getString(R.string.news_api_key)
+        val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&country=in&category=General&apiKey="+
+                /*application.baseContext.resources.getString(R.string.news_api_key)*/BuildConfig.API_KEY
         getNewsItemList(imageUrl)
-        initializeLikedNewsItems()
     }
 
     fun getNewsItemList(imageUrl:String) {
@@ -40,13 +37,12 @@ class SharedViewModel(
         newsItemList.value!!.remove(newsItem)
     }
 
-    fun insertLikedNewsItem(newsItem: NewsItem){
-        val likedNewsItem = LikedNewsItem(title = newsItem.title, description = newsItem.description,
-            imageUrl = newsItem.imageUrl, newsUrl = newsItem.newsUrl, isBookmarked = 1)
+    fun updateNewsItemListFromSearch(searchNewsItemList: ArrayList<NewsItem>){
+        newsItemList.value = searchNewsItemList
+    }
 
-        uiScope.launch {
-            insert(likedNewsItem)
-        }
+    fun insertLikedNewsItem(newsItem: NewsItem){
+        checkAndInsertNewsItem(newsItem)
     }
 
     private suspend fun insert(likedNewsItem: LikedNewsItem){
@@ -56,21 +52,7 @@ class SharedViewModel(
         }
     }
 
-    var likedNewsItems: LiveData<List<LikedNewsItem>> = MutableLiveData()
-
-    fun initializeLikedNewsItems() {
-        Log.d(TAG, "initializeLikedNewsItem")
-        uiScope.launch {
-            likedNewsItems = getAllData()
-        }
-    }
-
-    private suspend fun getAllData(): LiveData<List<LikedNewsItem>> {
-        Log.d(TAG, "getAllData")
-        return withContext(Dispatchers.IO) {
-            database.getAllLikedNewsItem()
-        }
-    }
+    var likedNewsItems = database.getAllLikedNewsItem()
 
     fun deleteLikedNewsItem(likedNewsItem: LikedNewsItem) {
         uiScope.launch {
@@ -81,6 +63,30 @@ class SharedViewModel(
     private suspend fun delete(likedNewsItem: LikedNewsItem) {
         withContext(Dispatchers.IO) {
             database.delete(likedNewsItem)
+        }
+    }
+
+    fun checkAndInsertNewsItem(newsItem: NewsItem) {
+        uiScope.launch {
+            var likedNewsItem = getNewsItemWithTitle(newsItem.title)
+            if (likedNewsItem == null){
+                val tempLikedNewsItem = LikedNewsItem(
+                    title = newsItem.title,
+                    description = newsItem.description,
+                    imageUrl = newsItem.imageUrl,
+                    newsUrl = newsItem.newsUrl,
+                    newsSourceName = newsItem.newsSourceName,
+                    isBookmarked = 1
+                )
+                uiScope.launch {
+                    insert(tempLikedNewsItem)
+                }
+            }
+        }
+    }
+    private suspend fun getNewsItemWithTitle(title: String): LikedNewsItem? {
+        return withContext(Dispatchers.IO){
+            database.getNewsArticleWithTitle(title)
         }
     }
 

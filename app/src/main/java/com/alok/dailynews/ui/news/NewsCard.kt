@@ -20,7 +20,7 @@ import com.mindorks.placeholderview.annotations.swipe.*
 
 @Layout(R.layout.item_news)
 class NewsCard (private val context:Context, private val newsItem: NewsItem,
-                private val swipePlaceHolderView: SwipePlaceHolderView, private val swipe: OnSwipe) {
+                private val swipe: OnSwipe<NewsItem>) {
 
     @View(R.id.news_image_iv)
     lateinit var newsImageView: ImageView
@@ -28,12 +28,15 @@ class NewsCard (private val context:Context, private val newsItem: NewsItem,
     lateinit var newsTitle: TextView
     @View(R.id.news_desc_tv)
     lateinit var newsDesc: TextView
+    @View(R.id.source_tv)
+    lateinit var newsSourceName: TextView
 
     @Resolve
     fun onResolved(){
         Glide.with(context).load(newsItem.imageUrl).placeholder(R.drawable.dailynews).into(newsImageView)
         newsTitle.text = newsItem.title
         newsDesc.text = newsItem.description
+        newsSourceName.text = String.format("click on the card for more at %s", newsItem.newsSourceName)
     }
 
     @Click(R.id.news_card)
@@ -44,8 +47,7 @@ class NewsCard (private val context:Context, private val newsItem: NewsItem,
 
     @SwipeOut
     fun onSwipeOut(){
-        Log.d("EVENT", "onSwipedOut");
-        swipePlaceHolderView.addView(this)
+        Log.d("EVENT", "onSwipedOut")
         swipe.onSwipeLeft(newsItem)
     }
 

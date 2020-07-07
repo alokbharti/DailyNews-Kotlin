@@ -1,4 +1,4 @@
-package com.alok.dailynews.ui.news
+package com.alok.dailynews.ui.discover
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -11,9 +11,9 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class NewsRepo {
-    val TAG = "NewsRepo"
-    val newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
+class DiscoverRepo {
+    val TAG = "DiscoverRepo"
+    private val newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
 
     fun getNewsData(imageUrl:String): MutableLiveData<ArrayList<NewsItem>> {
         Log.d(TAG, "image url: $imageUrl")

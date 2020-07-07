@@ -19,6 +19,8 @@ data class LikedNewsItem(
     var imageUrl:String = "Demo Image url",
     @ColumnInfo(name = "news_url")
     var newsUrl:String = "Demo news url",
+    @ColumnInfo(name = "news_source_name")
+    var newsSourceName: String = "Demo news source",
     @ColumnInfo(name = "is_news_bookmarked")
     var isBookmarked: Int = 1 //1 for true and 0 for false
 )

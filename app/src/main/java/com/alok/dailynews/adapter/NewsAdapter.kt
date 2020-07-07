@@ -21,7 +21,9 @@ import com.alok.dailynews.models.LikedNewsItem
 import com.bumptech.glide.Glide
 
 class NewsAdapter(var context: Context?,
-                  var onCustomClickListener: OnCustomClickListener<LikedNewsItem>) : ListAdapter<LikedNewsItem, NewsAdapter.ViewHolder>(LikedNewsItemDiffCallback()) {
+                  var onCustomClickListener: OnCustomClickListener<LikedNewsItem>)
+    : ListAdapter<LikedNewsItem, NewsAdapter.ViewHolder>(LikedNewsItemDiffCallback()) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemNewsBinding: ItemNewsBinding = ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemNewsBinding)
@@ -33,6 +35,7 @@ class NewsAdapter(var context: Context?,
         holder.newsDesc.text = newsItem.description
         Glide.with(this.context!!).load(newsItem.imageUrl).placeholder(R.drawable.dailynews)
             .into(holder.newsImage)
+        holder.newsSourceName.text = String.format("click on the card for more at %s", newsItem.newsSourceName)
 
         holder.newsFrameLayout.layoutParams =
             FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -51,6 +54,7 @@ class NewsAdapter(var context: Context?,
         val newsTitle: TextView = itemNewsBinding.newsTitleTv
         val newsDesc: TextView = itemNewsBinding.newsDescTv
         val newsImage: ImageView = itemNewsBinding.newsImageIv
+        val newsSourceName: TextView = itemNewsBinding.sourceTv
         val newsFrameLayout = itemNewsBinding.newsItemFl
         val likeBtn = itemNewsBinding.likeIb
     }

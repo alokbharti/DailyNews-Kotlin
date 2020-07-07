@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/small_margin"
-                    android:textColor="@android:color/black"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="@dimen/xxlarge_text"
                     android:fontFamily="@font/avenir"
                     android:textStyle="bold"
@@ -56,6 +56,15 @@
                     android:textStyle="normal"
                     tools:text="This is news description"
                     android:layout_margin="@dimen/small_margin"/>
+
+                <TextView
+                    android:id="@+id/source_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:textSize="@dimen/medium_text"
+                    tools:text="click on the cards for more at Hindustan Times"/>
             </LinearLayout>
 
             <ImageButton

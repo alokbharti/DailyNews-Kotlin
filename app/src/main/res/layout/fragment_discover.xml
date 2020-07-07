@@ -7,17 +7,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.discover.DiscoverFragment">
 
-
+    <SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/search_hint"
+        android:background="@drawable/round_shape"
+        android:layout_margin="@dimen/small_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/topic_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/category"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_view"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="@dimen/medium_margin"
-        android:textColor="@android:color/black"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="@dimen/xxxlarge_text"
         android:fontFamily="@font/avenir"/>
 
@@ -37,5 +47,13 @@
         app:layout_constraintTop_toBottomOf="@id/partition_view"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="@dimen/medium_margin"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_news_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/search_view"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

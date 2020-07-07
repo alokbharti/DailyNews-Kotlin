@@ -6,4 +6,5 @@ data class NewsItem(
     var description:String,
     var imageUrl:String,
     var newsUrl:String,
+    var newsSourceName:String,
     var isBookmarked:Boolean)

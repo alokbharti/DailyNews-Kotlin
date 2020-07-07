@@ -19,4 +19,7 @@ interface NewsDatabaseDao {
 
     @Query("SELECT * FROM news_article_liked_table WHERE newsId = :id")
     fun getFirstNewsArticle(id: Long): LikedNewsItem?
+
+    @Query("SELECT * FROM news_article_liked_table WHERE newsTitle = :title")
+    fun getNewsArticleWithTitle(title: String): LikedNewsItem?
 }
