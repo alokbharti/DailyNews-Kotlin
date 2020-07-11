@@ -15,15 +15,21 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.graphics.rotationMatrix
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alok.dailygraduation.ui.graduation.GraduationCard
 import com.alok.dailynews.databinding.DialogGraduationInfoBinding
 import com.alok.dailynews.databinding.FragmentGraduationBinding
+import com.alok.dailynews.interfaces.OnSwipe
+import com.alok.dailynews.models.GraduationItem
 import com.alok.dailynews.utility.Utils
 import com.mindorks.placeholderview.SwipeDecor
 import com.mindorks.placeholderview.SwipePlaceHolderView
@@ -31,11 +37,7 @@ import com.mindorks.placeholderview.SwipeViewBuilder
 import java.io.File
 
 
-class GraduationFragment : Fragment(), AdapterView.OnItemClickListener{
-
-    companion object {
-        fun newInstance() = GraduationFragment()
-    }
+class GraduationFragment : Fragment(), AdapterView.OnItemClickListener, OnSwipe<GraduationItem>{
 
     private lateinit var swipeView: SwipePlaceHolderView
     private lateinit var viewModel: GraduationViewModel
@@ -46,12 +48,18 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener{
     private val GET_FROM_GALLERY = 101
     private lateinit var messageDialog: AlertDialog
     private var currentSelectedCollege = "IIITDM Jabalpur"
+    private var totalCardNumber = MutableLiveData<Int>()
+    private lateinit var rotationAnimation: RotateAnimation
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
 
         binding = FragmentGraduationBinding.inflate(inflater, container, false)
+        rotationAnimation = RotateAnimation(0f, 360f,
+            Animation.RELATIVE_TO_SELF, 0.5f,
+            Animation.RELATIVE_TO_SELF, 0.5f)
+
         return binding.root
     }
 
@@ -70,7 +78,7 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener{
         viewModel.collegeList.observe(viewLifecycleOwner, Observer {
             if (it!=null){
                 arrayAdapter.addAll(it)
-                binding.collegeSpinner.setText(it[0],false)
+                binding.collegeSpinner.setText(it[0],true)
             }
         })
 
@@ -96,17 +104,19 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener{
         viewModel.collegeMemories.observe(viewLifecycleOwner, Observer {
             swipeView.removeAllViews()
             if (it==null || it.size ==0){
+                binding.noMemoriesTv.text = "No memories found!"
                 binding.noMemoriesTv.visibility = View.VISIBLE
             } else{
                 for (memory in it){
-                    val card = GraduationCard(requireContext(), memory)
+                    val card = GraduationCard(requireContext(), memory, this)
                     swipeView.addView(card)
                 }
-                binding.graduationLoadingLl.visibility = View.GONE
                 binding.graduationMemoriesCl.visibility = View.VISIBLE
                 binding.noMemoriesTv.visibility = View.GONE
             }
+            binding.graduationLoadingLl.visibility = View.GONE
             binding.loadingPb.visibility = View.GONE
+            binding.refreshBtn.clearAnimation()
         })
 
         dialogBinding = DialogGraduationInfoBinding.inflate(layoutInflater, null, false)
@@ -157,9 +167,22 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener{
         }
 
         binding.refreshBtn.setOnClickListener{
+            rotationAnimation.repeatCount = 0
+            rotationAnimation.duration = 2000
+            rotationAnimation.fillAfter = true
+            binding.refreshBtn.startAnimation(rotationAnimation)
+
             binding.loadingPb.visibility = View.VISIBLE
             viewModel.loadCollegeMemories(currentSelectedCollege)
         }
+
+        totalCardNumber.observe(viewLifecycleOwner, Observer {
+            Log.d("GraduationFragment","total card: $it")
+            if (it==1){
+                binding.noMemoriesTv.text = "You've seen all the memories, to see more select college name from the above list"
+                binding.noMemoriesTv.visibility = View.VISIBLE
+            }
+        })
     }
 
     private fun showDialog(message: String){
@@ -170,7 +193,7 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener{
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val collegeName:String = parent!!.getItemAtPosition(position) as String
         Log.d("GraduationFragment","collegeSelected: $collegeName")
-
+        binding.noMemoriesTv.visibility = View.GONE
         if (collegeName!=currentSelectedCollege) {
             binding.loadingPb.visibility = View.VISIBLE
             viewModel.loadCollegeMemories(collegeName)
@@ -190,6 +213,14 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener{
                 viewModel.getCompressedFile(requireContext(), bitmap)
             }
         }
+    }
+
+    override fun onSwipeRight(item: GraduationItem) {
+        totalCardNumber.value = swipeView.allResolvers.size
+    }
+
+    override fun onSwipeLeft(item: GraduationItem) {
+        totalCardNumber.value = swipeView.allResolvers.size
     }
 
 }

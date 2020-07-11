@@ -8,6 +8,7 @@
     <dimen name="common_margin">16dp</dimen>
     <dimen name="xlarge_margin">18dp</dimen>
     <dimen name="xxlarge_margin">22dp</dimen>
+    <dimen name="xxxlarge_margin">24dp</dimen>
 
     <!-- Text Size. -->
     <dimen name="xsmall_text">8sp</dimen>

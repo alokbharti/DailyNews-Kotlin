@@ -28,18 +28,6 @@
             android:textSize="@dimen/xxxlarge_text"/>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/no_memories_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No memories found"
-        android:textSize="@dimen/xxxlarge_text"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/graduation_memories_cl"
         android:layout_width="match_parent"
@@ -49,18 +37,30 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:id="@+id/spinner_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/common_margin"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toStartOf="@id/refresh_btn">
             <AutoCompleteTextView
                 android:id="@+id/college_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:cursorVisible="false"
                 android:inputType="none"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/refresh_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/xxxlarge_margin"
+            android:layout_marginEnd="@dimen/common_margin"
+            android:background="@drawable/ic_baseline_refresh_24"
+            android:backgroundTint="@android:color/secondary_text_light_nodisable"/>
 
         <com.mindorks.placeholderview.SwipePlaceHolderView
             android:id="@+id/graduation_swipe_view"
@@ -77,18 +77,22 @@
             app:icon="@drawable/ic_baseline_add_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="@dimen/medium_margin"/>
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/refresh_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/refresh"
-            app:icon="@drawable/ic_baseline_refresh_24"
-            app:layout_constraintEnd_toStartOf="@id/graduation_add_btn"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="@dimen/medium_margin"/>
+            android:layout_margin="@dimen/medium_margin"
+            android:backgroundTint="@android:color/holo_blue_dark"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/no_memories_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No memories found"
+        android:textSize="@dimen/xxxlarge_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/loading_pb"

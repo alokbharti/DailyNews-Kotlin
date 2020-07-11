@@ -47,7 +47,11 @@ class NewsRepo {
                             tempList.add(newsArticle)
                         }
                         Log.d(TAG, "newsArticle size: "+tempList.size)
-                        newsItemList.value = tempList
+                        if (tempList.size == 0){
+                            newsItemList.value = null
+                        } else {
+                            newsItemList.value = tempList
+                        }
                     }catch(e: JSONException){}
                 }
 

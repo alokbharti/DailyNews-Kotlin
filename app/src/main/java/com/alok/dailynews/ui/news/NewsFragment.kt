@@ -85,7 +85,7 @@ class NewsFragment : Fragment(), OnSwipe<NewsItem> {
             categorySelected = category
             fragmentNewsBinding.loadingLl.visibility = View.VISIBLE
             val url = "https://newsapi.org/v2/top-headlines?country=in&category=$category&apiKey="+
-                    /*application.baseContext.resources.getString(R.string.news_api_key)*/BuildConfig.API_KEY
+                    BuildConfig.API_KEY
             sharedViewModel.getNewsItemList(imageUrl = url)
         }
         setNewsData()
@@ -96,7 +96,7 @@ class NewsFragment : Fragment(), OnSwipe<NewsItem> {
                 page+=1
                 isCategoryChanged = false
                 val url = "https://newsapi.org/v2/top-headlines?country=in&category=$categorySelected&page=$page&apiKey="+
-                        /*application.baseContext.resources.getString(R.string.news_api_key)*/ BuildConfig.API_KEY
+                        BuildConfig.API_KEY
                 sharedViewModel.getNewsItemList(imageUrl = url)
             }
         }
@@ -121,7 +121,7 @@ class NewsFragment : Fragment(), OnSwipe<NewsItem> {
                 Log.d(TAG, "total view count: ${swipeView.allResolvers.size}")
             } else {
                 fragmentNewsBinding.loadingLl.visibility = View.VISIBLE
-                fragmentNewsBinding.loadingTv.visibility = View.VISIBLE
+                fragmentNewsBinding.loadingTv.visibility = View.GONE
                 fragmentNewsBinding.noDataTv.visibility = View.VISIBLE
             }
         })
