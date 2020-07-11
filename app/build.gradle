@@ -90,4 +90,8 @@ dependencies {
 
     //for making api call
     implementation 'com.amitshekhar.android:rx2-android-networking:1.0.2'
+
+    //for workmanager
+    def work = "2.3.4"
+    implementation "androidx.work:work-runtime-ktx:$work"
 }

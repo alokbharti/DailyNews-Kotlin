@@ -10,11 +10,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.alok.dailynews.R
 import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.ActivityMainBinding
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.utility.Constants.Companion.categorySelected
+import com.alok.dailynews.utility.PeriodicBackgroundNotification
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,6 +45,17 @@ class MainActivity : AppCompatActivity() {
         sharedViewModel = ViewModelProviders.of(this, newsViewModelFactory).get(SharedViewModel::class.java)
 
         handleIntent(intent)
+
+        //for showing notification
+        val periodWork = PeriodicWorkRequest.Builder(
+            PeriodicBackgroundNotification::class.java,15,
+            TimeUnit.MINUTES)
+            .addTag("periodic-pending-notification")
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "periodic-pending-notification",
+            ExistingPeriodicWorkPolicy.KEEP, periodWork)
     }
 
     override fun onNewIntent(intent: Intent) {
