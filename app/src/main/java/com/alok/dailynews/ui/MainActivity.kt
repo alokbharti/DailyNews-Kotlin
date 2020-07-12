@@ -1,17 +1,16 @@
 package com.alok.dailynews.ui
 
 import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.alok.dailynews.R
 import com.alok.dailynews.database.NewsDatabase
@@ -47,15 +46,20 @@ class MainActivity : AppCompatActivity() {
         handleIntent(intent)
 
         //for showing notification
-        val periodWork = PeriodicWorkRequest.Builder(
-            PeriodicBackgroundNotification::class.java,15,
-            TimeUnit.MINUTES)
-            .addTag("periodic-pending-notification")
-            .build()
+        val pref = getPreferences(Context.MODE_PRIVATE)
+        val isNotificationScheduled = pref.getBoolean("IS_NOTIFICATION_SCHEDULED", false)
 
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-            "periodic-pending-notification",
-            ExistingPeriodicWorkPolicy.KEEP, periodWork)
+        if (!isNotificationScheduled) {
+            val periodWorkRequest = PeriodicWorkRequestBuilder<PeriodicBackgroundNotification>(
+                15, TimeUnit.MINUTES)
+                .addTag("periodic-pending-notification")
+                .build()
+            WorkManager.getInstance(this).enqueue(periodWorkRequest)
+
+            val editor = pref.edit()
+            editor.putBoolean("IS_NOTIFICATION_SCHEDULED", true)
+            editor.apply()
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

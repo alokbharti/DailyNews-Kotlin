@@ -1,6 +1,7 @@
 package com.alok.dailynews.ui
 
 import android.app.Application
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -83,6 +84,7 @@ class SharedViewModel(
             }
         }
     }
+
     private suspend fun getNewsItemWithTitle(title: String): LikedNewsItem? {
         return withContext(Dispatchers.IO){
             database.getNewsArticleWithTitle(title)

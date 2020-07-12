@@ -101,7 +101,8 @@ class PeriodicBackgroundNotification(private val context: Context,
         notification.setContentText(newsItem.title)
         notification.priority = NotificationCompat.PRIORITY_HIGH
         notification.setCategory(NotificationCompat.CATEGORY_ALARM)
-        notification.setSmallIcon(R.drawable.dailynews_icon)
+        notification.setSmallIcon(R.drawable.dailynews_app_icon)
+        notification.setAutoCancel(true)
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         notification.setSound(sound)
         val vibrate = longArrayOf(0, 100, 200, 300)
