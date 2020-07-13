@@ -6,7 +6,9 @@ import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
+import android.media.AudioAttributes
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -73,15 +75,22 @@ class PeriodicBackgroundNotification(private val context: Context,
     }
 
     private fun showNotification(newsItem: NewsItem, context: Context) {
+        val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "News Update"
             val descriptionText = "CHANNEL_FOR_UPPER_API_LEVEL"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel("CHANNEL_ID_PERIOD_WORK", name, importance).apply {
                 description = descriptionText
+                val audioAttributes = AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .build()
+                setSound(soundUri, audioAttributes)
+                vibrationPattern = longArrayOf(0, 100, 200, 300)
             }
             // Register the channel with the system
             val notificationManager: NotificationManager =
@@ -100,11 +109,10 @@ class PeriodicBackgroundNotification(private val context: Context,
         notification.setContentTitle("News Update")
         notification.setContentText(newsItem.title)
         notification.priority = NotificationCompat.PRIORITY_HIGH
-        notification.setCategory(NotificationCompat.CATEGORY_ALARM)
-        notification.setSmallIcon(R.drawable.dailynews_app_icon)
+        notification.setCategory(NotificationCompat.CATEGORY_SOCIAL)
+        notification.setSmallIcon(R.drawable.dailynews_notification_icon)
         notification.setAutoCancel(true)
-        val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        notification.setSound(sound)
+        notification.setSound(soundUri)
         val vibrate = longArrayOf(0, 100, 200, 300)
         notification.setVibrate(vibrate)
 

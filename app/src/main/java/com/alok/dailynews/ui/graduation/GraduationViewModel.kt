@@ -2,6 +2,7 @@ package com.alok.dailynews.ui.graduation
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.media.ExifInterface
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -49,8 +50,8 @@ class GraduationViewModel : ViewModel() {
     private suspend fun getFile(context: Context, imageFile: Bitmap):File{
         return withContext(Dispatchers.IO){
             //create a file to write bitmap data
-            val f = File(context.cacheDir, "ImageFile");
-            f.createNewFile();
+            val f = File(context.cacheDir, "ImageFile")
+            f.createNewFile()
 
             Log.d("GraduationViewModel", "original file size:${imageFile.byteCount}")
 

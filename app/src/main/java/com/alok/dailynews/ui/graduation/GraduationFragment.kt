@@ -1,5 +1,6 @@
 package com.alok.dailynews.ui.graduation
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
+import android.media.ExifInterface
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI
@@ -14,13 +16,13 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.graphics.rotationMatrix
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -35,9 +37,10 @@ import com.mindorks.placeholderview.SwipeDecor
 import com.mindorks.placeholderview.SwipePlaceHolderView
 import com.mindorks.placeholderview.SwipeViewBuilder
 import java.io.File
+import java.net.URI
 
 
-class GraduationFragment : Fragment(), AdapterView.OnItemClickListener, OnSwipe<GraduationItem>{
+class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwipe<GraduationItem>{
 
     private lateinit var swipeView: SwipePlaceHolderView
     private lateinit var viewModel: GraduationViewModel
@@ -63,6 +66,7 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener, OnSwipe<
         return binding.root
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(GraduationViewModel::class.java)
@@ -78,12 +82,14 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener, OnSwipe<
         viewModel.collegeList.observe(viewLifecycleOwner, Observer {
             if (it!=null){
                 arrayAdapter.addAll(it)
-                binding.collegeSpinner.setText(it[0],true)
             }
         })
 
-        binding.collegeSpinner.setAdapter(arrayAdapter)
-        binding.collegeSpinner.onItemClickListener = this
+        binding.spinnerLayout.apply {
+            adapter = arrayAdapter
+            setSelection(0)
+            onItemSelectedListener = this@GraduationFragment
+        }
 
         val bottomMargin = Utils.dpToPx(250)
         val windowSize : Point = Utils.getDisplaySize(requireActivity().windowManager)
@@ -124,7 +130,10 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener, OnSwipe<
             .setView(dialogBinding.root).create()
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-        dialogBinding.collegeSearchSpinner.setAdapter(arrayAdapter)
+        dialogBinding.collegeSearchSpinner.apply {
+            setAdapter(arrayAdapter)
+            threshold = 0
+        }
         dialogBinding.cancelBtn.setOnClickListener{
             dialog.dismiss()
         }
@@ -137,11 +146,21 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener, OnSwipe<
             val email = dialogBinding.emailEt.text.toString()
             val college = dialogBinding.collegeSearchSpinner.text.toString()
             val title = dialogBinding.graduationTitle.text.toString()
-            if (imageFile!=null) {
-                viewModel.addCollegeMemory(imageFile!!, email, college, title)
-                dialogBinding.memoryPb.visibility = View.VISIBLE
+
+            if (email.isEmpty()){
+                Toast.makeText(context, "Email is required!", Toast.LENGTH_SHORT).show()
+            } else if (college.isEmpty()){
+                Toast.makeText(context, "Select at least one college!", Toast.LENGTH_SHORT).show()
+            } else if (!dialogBinding.disclaimerCb.isChecked){
+                Toast.makeText(context, "Accept the terms before submitting!", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(context, "Please wait, image is uploading", Toast.LENGTH_SHORT).show()
+                if (imageFile != null) {
+                    viewModel.addCollegeMemory(imageFile!!, email, college, title)
+                    dialogBinding.memoryPb.visibility = View.VISIBLE
+                } else {
+                    Toast.makeText(context, "Please wait, image is uploading", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
 
@@ -190,7 +209,7 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener, OnSwipe<
         messageDialog.show()
     }
 
-    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val collegeName:String = parent!!.getItemAtPosition(position) as String
         Log.d("GraduationFragment","collegeSelected: $collegeName")
         binding.noMemoriesTv.visibility = View.GONE
@@ -199,6 +218,10 @@ class GraduationFragment : Fragment(), AdapterView.OnItemClickListener, OnSwipe<
             viewModel.loadCollegeMemories(collegeName)
             currentSelectedCollege = collegeName
         }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

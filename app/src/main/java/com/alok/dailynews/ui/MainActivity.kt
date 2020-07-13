@@ -3,15 +3,14 @@ package com.alok.dailynews.ui
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.alok.dailynews.R
 import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.ActivityMainBinding
@@ -25,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedViewModel: SharedViewModel
     lateinit var activityMainBinding: ActivityMainBinding
     val queryData = MutableLiveData<String>()
+    private lateinit var pref: SharedPreferences
+    private lateinit var periodWorkRequest: WorkRequest
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //delegate.localNightMode = MODE_NIGHT_YES
@@ -45,21 +46,16 @@ class MainActivity : AppCompatActivity() {
 
         handleIntent(intent)
 
+        pref = getPreferences(Context.MODE_PRIVATE)
         //for showing notification
-        val pref = getPreferences(Context.MODE_PRIVATE)
-        val isNotificationScheduled = pref.getBoolean("IS_NOTIFICATION_SCHEDULED", false)
-
-        if (!isNotificationScheduled) {
-            val periodWorkRequest = PeriodicWorkRequestBuilder<PeriodicBackgroundNotification>(
-                15, TimeUnit.MINUTES)
-                .addTag("periodic-pending-notification")
-                .build()
-            WorkManager.getInstance(this).enqueue(periodWorkRequest)
-
-            val editor = pref.edit()
-            editor.putBoolean("IS_NOTIFICATION_SCHEDULED", true)
-            editor.apply()
-        }
+        periodWorkRequest = PeriodicWorkRequestBuilder<PeriodicBackgroundNotification>(
+            6, TimeUnit.HOURS)
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS)
+            .addTag("periodic-pending-notification")
+            .build()
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -92,6 +88,14 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         categorySelected = "General"
+
+        val isNotificationScheduled = pref.getBoolean("IS_NOTIFICATION_SCHEDULED", false)
+        if (!isNotificationScheduled) {
+            WorkManager.getInstance(this).enqueue(periodWorkRequest)
+            val editor = pref.edit()
+            editor.putBoolean("IS_NOTIFICATION_SCHEDULED", true)
+            editor.apply()
+        }
     }
 
 }
