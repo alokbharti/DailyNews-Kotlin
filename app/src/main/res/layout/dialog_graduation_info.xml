@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/round_shape"
+    android:backgroundTint="@color/categoryCard"
     android:paddingBottom="@dimen/medium_margin">
     <TextView
         android:id="@+id/dialog_title"
@@ -18,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:padding="@dimen/medium_margin"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email_layout"
         android:layout_width="match_parent"
@@ -26,12 +28,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/medium_margin"
+        app:boxBackgroundColor="@color/white"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/email_et"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/email_id"
+            android:textColorHint="@color/secondaryTextColor"
             android:inputType="textEmailAddress"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -43,12 +47,14 @@
         app:layout_constraintTop_toBottomOf="@id/email_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:boxBackgroundColor="@color/white"
         android:layout_margin="@dimen/medium_margin">
         <AutoCompleteTextView
             android:id="@+id/college_search_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
+            android:textColorHint="@color/secondaryTextColor"
             android:hint="Select your college"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,12 +66,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/medium_margin"
+        app:boxBackgroundColor="@color/white"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/graduation_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/image_desc"
+            android:textColorHint="@color/secondaryTextColor"
             android:inputType="textMultiLine"
             android:maxLines="3"
             android:gravity="top"/>
@@ -80,7 +88,7 @@
         app:layout_constraintEnd_toStartOf="@id/upload_image"
         android:text="College memory picture"
         android:fontFamily="@font/avenir"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primaryTextColor"
         android:textSize="@dimen/large_text"
         android:layout_marginTop="@dimen/xxlarge_margin"
         android:layout_marginStart="@dimen/medium_margin"/>
@@ -103,6 +111,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/medium_margin"
         android:text="@string/disclaimer"
+        android:textColor="@color/primaryTextColor"
         android:gravity="top"/>
 
     <Button
@@ -123,7 +132,8 @@
         app:layout_constraintEnd_toStartOf="@id/submit_memory_btn"
         android:layout_margin="@dimen/medium_margin"
         android:text="@string/cancel"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black"
+        android:backgroundTint="@color/gray"/>
 
     <ProgressBar
         android:id="@+id/memory_pb"

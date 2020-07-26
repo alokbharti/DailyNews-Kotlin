@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.graduation.GraduationFragment">
+    tools:context=".ui.graduation.GraduationFragment"
+    android:background="@color/background">
 
     <LinearLayout
         android:id="@+id/graduation_loading_ll"
@@ -18,13 +19,14 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/graduation_cap"
+            android:background="@drawable/ic_graduation_cap"
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginEnd="@dimen/medium_margin"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loading college memories..."
+            android:textColor="@color/secondaryTextColor"
             android:textSize="@dimen/xxxlarge_text"/>
     </LinearLayout>
 
@@ -32,7 +34,7 @@
         android:id="@+id/graduation_memories_cl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <!--<com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -86,7 +88,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_a_memory"
+            android:textColor="@color/white"
             app:icon="@drawable/ic_baseline_add_24"
+            app:iconTint="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_margin="@dimen/medium_margin"
@@ -98,6 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No memories found"
+        android:textColor="@color/secondaryTextColor"
         android:textSize="@dimen/xxxlarge_text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

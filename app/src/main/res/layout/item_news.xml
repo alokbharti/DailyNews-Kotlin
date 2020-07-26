@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/small_margin"
-                    android:textColor="?android:attr/textColorPrimary"
+                    android:textColor="@color/primaryTextColor"
                     android:textSize="@dimen/xxlarge_text"
                     android:fontFamily="@font/avenir"
                     android:textStyle="bold"
@@ -54,6 +54,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/xxlarge_text"
                     android:textStyle="normal"
+                    android:textColor="@color/secondaryTextColor"
                     tools:text="This is news description"
                     android:layout_margin="@dimen/small_margin"/>
 
@@ -64,6 +65,7 @@
                     android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginBottom="@dimen/small_margin"
                     android:textSize="@dimen/medium_text"
+                    android:textColor="@color/secondaryTextColor"
                     tools:text="click on the cards for more at Hindustan Times"/>
             </LinearLayout>
 

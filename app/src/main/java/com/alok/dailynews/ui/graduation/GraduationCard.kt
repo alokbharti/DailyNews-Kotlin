@@ -24,7 +24,7 @@ class GraduationCard(private val context: Context, private val graduationItem: G
 
     @Resolve
     fun onResolved(){
-        Glide.with(context).load(graduationItem.imageUrl).placeholder(R.drawable.graduation_cap).into(graduationImageView)
+        Glide.with(context).load(graduationItem.imageUrl).placeholder(R.drawable.ic_graduation_cap).into(graduationImageView)
         graduationTitle.text = graduationItem.title
     }
 

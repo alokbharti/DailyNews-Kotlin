@@ -25,7 +25,7 @@
         android:id="@+id/bttm_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#222121"
+        android:background="@color/navigation"
         app:itemIconTint="@color/bnv_tab_item_foreground"
         app:itemTextColor="@color/bnv_tab_item_foreground"
         app:layout_constraintLeft_toLeftOf="parent"

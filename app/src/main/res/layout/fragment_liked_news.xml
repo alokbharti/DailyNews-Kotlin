@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.liked.LikedNewsFragment">
+    tools:context=".ui.liked.LikedNewsFragment"
+    android:background="@color/background">
 
     <TextView
         android:id="@+id/no_items_found_tv"
@@ -18,7 +19,7 @@
         android:text="@string/no_liked_item_found_message"
         android:textSize="@dimen/xxxlarge_text"
         android:textAlignment="center"
-        android:textColor="@android:color/black"
+        android:textColor="@color/primaryTextColor"
         android:fontFamily="monospace"
         android:visibility="gone"/>
 

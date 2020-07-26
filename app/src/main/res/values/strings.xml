@@ -19,4 +19,5 @@
     <string name="cancel">cancel</string>
     <string name="add_memory_dialog_title">Add your College Memory</string>
     <string name="refresh">Refresh</string>
+    <string name="settings">Settings</string>
 </resources>

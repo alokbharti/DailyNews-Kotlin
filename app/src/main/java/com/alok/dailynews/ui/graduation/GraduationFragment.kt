@@ -96,7 +96,7 @@ class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwi
 
         swipeView = binding.graduationSwipeView
         swipeView.getBuilder<SwipePlaceHolderView, SwipeViewBuilder<SwipePlaceHolderView>>()
-            /*.setDisplayViewCount(3)*/
+            .setDisplayViewCount(3)
             .setWidthSwipeDistFactor(8f) // horizontal distance = display width / 8
             .setHeightSwipeDistFactor(10f) // vertical distance = display height / 10
             .setSwipeDecor(

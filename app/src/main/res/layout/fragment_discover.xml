@@ -1,59 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.discover.DiscoverFragment">
-
-    <SearchView
-        android:id="@+id/search_view"
+    tools:context=".ui.discover.DiscoverFragment"
+    android:background="@color/background">
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:iconifiedByDefault="false"
-        android:queryHint="@string/search_hint"
-        android:background="@drawable/round_shape"
-        android:layout_margin="@dimen/small_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:background="@color/background">
 
-    <TextView
-        android:id="@+id/topic_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/category"
-        app:layout_constraintTop_toBottomOf="@id/search_view"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="@dimen/medium_margin"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="@dimen/xxxlarge_text"
-        android:fontFamily="@font/avenir"/>
+        <SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/search_hint"
+            android:background="@drawable/round_shape"
+            android:layout_margin="@dimen/small_margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <View
-        android:id="@+id/partition_view"
-        android:layout_width="@dimen/xxlarge_margin"
-        android:layout_height="2dp"
-        app:layout_constraintTop_toBottomOf="@id/topic_tv"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@android:color/black"
-        android:layout_margin="@dimen/medium_margin"/>
+        <TextView
+            android:id="@+id/topic_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/category"
+            app:layout_constraintTop_toBottomOf="@id/search_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="@dimen/medium_margin"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="@dimen/xxxlarge_text"
+            android:fontFamily="@font/avenir"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/topics_rv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/partition_view"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="@dimen/medium_margin"/>
+        <View
+            android:id="@+id/partition_view"
+            android:layout_width="@dimen/xxlarge_margin"
+            android:layout_height="2dp"
+            app:layout_constraintTop_toBottomOf="@id/topic_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@color/primaryTextColor"
+            android:layout_margin="@dimen/medium_margin"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_news_rv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/search_view"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/topics_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/partition_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="@dimen/medium_margin"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:id="@+id/helper_view"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            app:layout_constraintTop_toBottomOf="@id/topics_rv"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="#BDBDBD"
+            android:visibility="visible"
+            android:layout_marginTop="@dimen/xxsmall_margin"/>
+
+        <ImageView
+            android:id="@+id/day_night_iv"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintTop_toBottomOf="@id/helper_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/large_margin"
+            android:layout_marginEnd="@dimen/large_margin"
+            android:layout_marginTop="@dimen/xxxlarge_text"
+            android:background="@drawable/day_and_night"/>
+
+        <TextView
+            android:id="@+id/night_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/day_night_iv"
+            app:layout_constraintTop_toBottomOf="@id/helper_view"
+            android:text="Night Mode"
+            android:textSize="@dimen/xxlarge_text"
+            android:textColor="@color/primaryTextColor"
+            android:layout_margin="@dimen/medium_margin"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/night_tv"
+            app:layout_constraintStart_toEndOf="@id/day_night_iv"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:text="For better readability at night"
+            android:textColor="@color/secondaryTextColor"/>
+
+        <ToggleButton
+            android:id="@+id/mode_toggle_btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:layout_constraintTop_toBottomOf="@id/helper_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@drawable/toggle_selector"
+            android:textOff=" "
+            android:textOn=" "/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_news_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/search_view"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

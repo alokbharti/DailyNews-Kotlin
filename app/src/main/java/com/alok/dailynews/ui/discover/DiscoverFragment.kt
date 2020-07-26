@@ -2,6 +2,7 @@ package com.alok.dailynews.ui.discover
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.provider.SearchRecentSuggestions
 import android.util.Log
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SearchView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -115,6 +117,18 @@ class DiscoverFragment : Fragment(), OnCustomClickListener<NewsCategoryItem>, Se
         closeButton.setOnClickListener{
             binding.searchNewsRv.isVisible = false
             binding.searchView.setQuery("", false)
+        }
+
+        val sharedPreferences = requireActivity().getSharedPreferences("com.alok.app",Context.MODE_PRIVATE)
+        val isNightModeOn = sharedPreferences.getBoolean("NIGHT_MODE", false)
+        when{
+            isNightModeOn -> binding.modeToggleBtn.isChecked = true
+            else -> binding.modeToggleBtn.isChecked = false
+        }
+
+        binding.modeToggleBtn.setOnClickListener{
+            sharedPreferences.edit().putBoolean("NIGHT_MODE", !isNightModeOn).apply()
+            requireActivity().recreate()
         }
     }
 
