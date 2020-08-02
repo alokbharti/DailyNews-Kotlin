@@ -108,6 +108,7 @@ class DiscoverFragment : Fragment(), OnCustomClickListener<NewsCategoryItem>, Se
                 binding.searchView.setQuery(it, false)
                 binding.searchView.clearFocus()
                 binding.searchNewsRv.visibility = View.VISIBLE
+                binding.modeToggleBtn.visibility = View.GONE
                 setNewsData(it)
             }
         })
@@ -116,6 +117,7 @@ class DiscoverFragment : Fragment(), OnCustomClickListener<NewsCategoryItem>, Se
         var closeButton: ImageView = binding.searchView.findViewById(closeBtnId)
         closeButton.setOnClickListener{
             binding.searchNewsRv.isVisible = false
+            binding.modeToggleBtn.visibility = View.VISIBLE
             binding.searchView.setQuery("", false)
         }
 
@@ -151,6 +153,7 @@ class DiscoverFragment : Fragment(), OnCustomClickListener<NewsCategoryItem>, Se
 
     override fun onClose(): Boolean {
         binding.searchNewsRv.visibility = View.GONE
+        binding.modeToggleBtn.visibility = View.VISIBLE;
         return true
     }
 
