@@ -12,6 +12,7 @@ This is an android app which display the latest news article provided by <a href
   - See your bookmarked news on the Liked section
   - Explore more news categories on the Discover section
   - Switch to night mode for better visibility
+  - See the memories of all recent graduates
   
 ## Demo of the application
 ![](DailyNews_kotlin.gif)
@@ -32,7 +33,7 @@ Clone this repo and open it in your android studio. Then get an API key from [Ne
 Put this api key in local.properties file and run it on your emulator or android phone. 
 
 ## Updates
-Checkout the app on PlayStore: Link(https://play.google.com/store/apps/details?id=com.alok.dailynews)
+Checkout the app on PlayStore: [Link](https://play.google.com/store/apps/details?id=com.alok.dailynews)
 
 # License
       Copyright (c) 2020. Alok Bharti
