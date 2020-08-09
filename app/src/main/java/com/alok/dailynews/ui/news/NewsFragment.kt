@@ -46,10 +46,7 @@ class NewsFragment : Fragment(), OnSwipe<NewsItem> {
         val application = requireNotNull(this.activity).application
         val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
         val newsViewModelFactory =
-            SharedViewModelFactory(
-                datasource,
-                application
-            )
+            SharedViewModelFactory(datasource)
         sharedViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(SharedViewModel::class.java)
         newsItemList = ArrayList()
 

@@ -6,15 +6,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.alok.dailynews.database.NewsDatabaseDao
 
 class SharedViewModelFactory(
-    private val dataSource: NewsDatabaseDao,
-    private val application: Application): ViewModelProvider.Factory {
+    private val dataSource: NewsDatabaseDao): ViewModelProvider.Factory {
 
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(SharedViewModel::class.java)){
             return SharedViewModel(
-                dataSource,
-                application
+                dataSource
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

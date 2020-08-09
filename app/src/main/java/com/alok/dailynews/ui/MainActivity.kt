@@ -48,8 +48,7 @@ class MainActivity : AppCompatActivity() {
         val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
         val newsViewModelFactory =
             SharedViewModelFactory(
-                datasource,
-                application
+                datasource
             )
         sharedViewModel = ViewModelProviders.of(this, newsViewModelFactory).get(SharedViewModel::class.java)
 

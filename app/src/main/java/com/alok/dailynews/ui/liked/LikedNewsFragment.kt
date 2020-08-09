@@ -31,7 +31,7 @@ class LikedNewsFragment : Fragment(), OnCustomClickListener<LikedNewsItem> {
 
         val application = requireNotNull(this.activity).application
         val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
-        val newsViewModelFactory = SharedViewModelFactory(datasource, application)
+        val newsViewModelFactory = SharedViewModelFactory(datasource)
         likedNewsViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(SharedViewModel::class.java)
 
         val adapter = NewsAdapter(context, this)

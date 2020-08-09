@@ -1,20 +1,21 @@
 package com.alok.dailynews.ui
 
-import android.app.Application
-import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.alok.dailynews.BuildConfig
 import com.alok.dailynews.database.NewsDatabaseDao
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.ui.news.NewsRepo
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 
 class SharedViewModel(
-    val database: NewsDatabaseDao,
-    application: Application) : AndroidViewModel(application)  {
+    val database: NewsDatabaseDao
+) : ViewModel()  {
 
     private val TAG = "SharedViewModel"
     private var viewModelJob = Job()
@@ -52,7 +53,7 @@ class SharedViewModel(
         }
     }
 
-    var likedNewsItems = database.getAllLikedNewsItem()
+    var likedNewsItems: LiveData<List<LikedNewsItem>> = database.getAllLikedNewsItem().asLiveData()
 
     fun deleteLikedNewsItem(likedNewsItem: LikedNewsItem) {
         uiScope.launch {
