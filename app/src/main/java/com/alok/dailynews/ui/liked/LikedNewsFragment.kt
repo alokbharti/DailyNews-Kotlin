@@ -11,12 +11,15 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.alok.dailynews.adapter.NewsAdapter
-import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.FragmentLikedNewsBinding
 import com.alok.dailynews.interfaces.OnCustomClickListener
 import com.alok.dailynews.models.LikedNewsItem
-import com.alok.dailynews.ui.SharedViewModelFactory
+import com.alok.dailynews.ui.MainActivity
 import com.alok.dailynews.ui.SharedViewModel
+import com.alok.dailynews.utility.Utils
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 
 class LikedNewsFragment : Fragment(), OnCustomClickListener<LikedNewsItem> {
 
@@ -29,10 +32,7 @@ class LikedNewsFragment : Fragment(), OnCustomClickListener<LikedNewsItem> {
         // Inflate the layout for this fragment
         val binding: FragmentLikedNewsBinding = FragmentLikedNewsBinding.inflate(layoutInflater, container, false)
 
-        val application = requireNotNull(this.activity).application
-        val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
-        val newsViewModelFactory = SharedViewModelFactory(datasource)
-        likedNewsViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(SharedViewModel::class.java)
+        likedNewsViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
 
         val adapter = NewsAdapter(context, this)
         binding.newsRv.layoutManager = LinearLayoutManager(context)
@@ -50,6 +50,32 @@ class LikedNewsFragment : Fragment(), OnCustomClickListener<LikedNewsItem> {
             adapter.submitList(tempLikedNewsItems)
         })
 
+        //check the number of liked news item. If it is more than 10, then it means that
+        //user has interacted enough to give a review for the app but also check the last app
+        //review requested timestamp. Interval should be of minimum 1 month
+        //first check whether has reviewed our app or not
+        var isTimeConstraintGood = false
+        val lastAppReviewRequestTimestamp = likedNewsViewModel.getLastAppReviewRequestedTimestamp()
+        Log.d("LikedNewsFragment", "last timestamp: $lastAppReviewRequestTimestamp")
+        if(lastAppReviewRequestTimestamp > 0){
+            val diff = System.currentTimeMillis() - lastAppReviewRequestTimestamp
+            val oneMonthTimestamp = 2592000000 //in millis
+            if (diff > oneMonthTimestamp){
+                isTimeConstraintGood = true
+            }
+        } else {
+            isTimeConstraintGood = true
+        }
+
+        if(!likedNewsViewModel.hasUserReviewedOurApp()) {
+            likedNewsViewModel.numberOfLikedNewsItem.observe(viewLifecycleOwner, Observer {
+                if (it != null && it > 10 && isTimeConstraintGood) {
+                    likedNewsViewModel.setLastAppReviewRequestedTimestamp()
+                    askForReview()
+                }
+            })
+        }
+
         return binding.root
     }
 
@@ -58,4 +84,20 @@ class LikedNewsFragment : Fragment(), OnCustomClickListener<LikedNewsItem> {
         likedNewsViewModel.deleteLikedNewsItem(obj)
     }
 
+    private fun askForReview() {
+        val manager = ReviewManagerFactory.create(requireContext())
+        var reviewInfo: ReviewInfo
+        manager.requestReviewFlow().addOnCompleteListener{request ->
+            if(request.isSuccessful){
+                reviewInfo = request.result
+                manager.launchReviewFlow(requireActivity(), reviewInfo).addOnCompleteListener{
+                    Log.d("LikedNewsFragment", "success launch")
+                    //success app review, go with the flow
+                    likedNewsViewModel.setHasUserReviewedOurApp(true)
+                }.addOnFailureListener{
+                    //launching failed
+                }
+            }
+        }
+    }
 }

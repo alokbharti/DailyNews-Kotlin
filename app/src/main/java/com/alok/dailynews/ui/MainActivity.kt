@@ -6,8 +6,10 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -18,9 +20,18 @@ import com.alok.dailynews.databinding.ActivityMainBinding
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.utility.Constants.Companion.categorySelected
 import com.alok.dailynews.utility.PeriodicBackgroundNotification
+import com.alok.dailynews.utility.Utils
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.android.play.core.review.testing.FakeReviewManager
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TAG = "MainActivity"
+    }
 
     private lateinit var sharedViewModel: SharedViewModel
     lateinit var activityMainBinding: ActivityMainBinding
@@ -44,13 +55,8 @@ class MainActivity : AppCompatActivity() {
         val view = activityMainBinding.root
         setContentView(view)
         setUpNavigation()
-        val application = requireNotNull(this).application
-        val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
-        val newsViewModelFactory =
-            SharedViewModelFactory(
-                datasource
-            )
-        sharedViewModel = ViewModelProviders.of(this, newsViewModelFactory).get(SharedViewModel::class.java)
+
+        sharedViewModel = ViewModelProviders.of(this).get(SharedViewModel::class.java)
 
         handleIntent(intent)
 

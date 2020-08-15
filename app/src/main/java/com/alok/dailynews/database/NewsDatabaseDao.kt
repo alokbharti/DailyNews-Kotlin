@@ -16,6 +16,9 @@ interface NewsDatabaseDao {
     @Query("SELECT * FROM news_article_liked_table ORDER BY newsId DESC")
     fun getAllLikedNewsItem(): Flow<List<LikedNewsItem>>
 
+    @Query("SELECT COUNT(newsId) FROM news_article_liked_table")
+    fun getNumberOfLikedNewsItem(): Flow<Int>
+
     @Query("SELECT * FROM news_article_liked_table WHERE newsId = :id")
     fun getFirstNewsArticle(id: Long): LikedNewsItem?
 

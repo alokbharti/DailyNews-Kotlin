@@ -1,22 +1,21 @@
 package com.alok.dailynews.ui
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.alok.dailynews.BuildConfig
+import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.database.NewsDatabaseDao
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
 import com.alok.dailynews.ui.news.NewsRepo
+import com.alok.dailynews.utility.Utils
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 
-class SharedViewModel(
-    val database: NewsDatabaseDao
-) : ViewModel()  {
+class SharedViewModel(application: Application) : AndroidViewModel(application)  {
 
+    private var dao: NewsDatabaseDao = NewsDatabase.getInstance(application).newsDatabaseDao
     private val TAG = "SharedViewModel"
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main+viewModelJob)
@@ -24,8 +23,10 @@ class SharedViewModel(
     var newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
 
     init {
-        val imageUrl = "https://newsapi.org/v2/top-headlines?language=en&country=in&category=General&apiKey="+
-                /*application.baseContext.resources.getString(R.string.news_api_key)*/BuildConfig.API_KEY
+        Log.d(TAG, "initializing constructor")
+        val imageUrl =
+            "https://newsapi.org/v2/top-headlines?language=en&country=in&category=General&apiKey="+
+                    BuildConfig.API_KEY
         getNewsItemList(imageUrl)
     }
 
@@ -49,11 +50,12 @@ class SharedViewModel(
     private suspend fun insert(likedNewsItem: LikedNewsItem){
         Log.d(TAG,"in insert, likedNewsItem title: "+likedNewsItem.title)
         withContext(Dispatchers.IO){
-            database.insert(likedNewsItem)
+            dao.insert(likedNewsItem)
         }
     }
 
-    var likedNewsItems: LiveData<List<LikedNewsItem>> = database.getAllLikedNewsItem().asLiveData()
+    var likedNewsItems: LiveData<List<LikedNewsItem>> = dao.getAllLikedNewsItem().asLiveData()
+    var numberOfLikedNewsItem: LiveData<Int> = dao.getNumberOfLikedNewsItem().asLiveData()
 
     fun deleteLikedNewsItem(likedNewsItem: LikedNewsItem) {
         uiScope.launch {
@@ -63,7 +65,7 @@ class SharedViewModel(
 
     private suspend fun delete(likedNewsItem: LikedNewsItem) {
         withContext(Dispatchers.IO) {
-            database.delete(likedNewsItem)
+            dao.delete(likedNewsItem)
         }
     }
 
@@ -88,8 +90,24 @@ class SharedViewModel(
 
     private suspend fun getNewsItemWithTitle(title: String): LikedNewsItem? {
         return withContext(Dispatchers.IO){
-            database.getNewsArticleWithTitle(title)
+            dao.getNewsArticleWithTitle(title)
         }
+    }
+
+    fun getLastAppReviewRequestedTimestamp():Long{
+        return Utils.getLastAppReviewRequestedTimestamp(getApplication())
+    }
+
+    fun setLastAppReviewRequestedTimestamp(){
+        Utils.setLastAppReviewRequested(getApplication(), System.currentTimeMillis())
+    }
+
+    fun hasUserReviewedOurApp(): Boolean{
+        return Utils.hasUserReviewedOurApp(getApplication())
+    }
+
+    fun setHasUserReviewedOurApp(hasReviewed: Boolean){
+        Utils.setHasUserGaveAppReview(getApplication(), hasReviewed)
     }
 
     override fun onCleared() {

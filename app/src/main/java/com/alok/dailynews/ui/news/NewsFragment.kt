@@ -12,11 +12,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alok.dailynews.BuildConfig
 import com.alok.dailynews.R
-import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.databinding.FragmentNewsBinding
 import com.alok.dailynews.interfaces.OnSwipe
 import com.alok.dailynews.models.NewsItem
-import com.alok.dailynews.ui.SharedViewModelFactory
 import com.alok.dailynews.ui.SharedViewModel
 import com.alok.dailynews.utility.Constants.Companion.categorySelected
 import com.alok.dailynews.utility.Utils
@@ -43,11 +41,7 @@ class NewsFragment : Fragment(), OnSwipe<NewsItem> {
 
         fragmentNewsBinding = FragmentNewsBinding.inflate(layoutInflater)
 
-        val application = requireNotNull(this.activity).application
-        val datasource = NewsDatabase.getInstance(application).newsDatabaseDao
-        val newsViewModelFactory =
-            SharedViewModelFactory(datasource)
-        sharedViewModel = ViewModelProviders.of(requireActivity(), newsViewModelFactory).get(SharedViewModel::class.java)
+        sharedViewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel::class.java)
         newsItemList = ArrayList()
 
         val bottomMargin = Utils.dpToPx(160)
