@@ -32,10 +32,12 @@ import com.alok.dailynews.databinding.DialogGraduationInfoBinding
 import com.alok.dailynews.databinding.FragmentGraduationBinding
 import com.alok.dailynews.interfaces.OnSwipe
 import com.alok.dailynews.models.GraduationItem
+import com.alok.dailynews.utility.NetworkResult
 import com.alok.dailynews.utility.Utils
 import com.mindorks.placeholderview.SwipeDecor
 import com.mindorks.placeholderview.SwipePlaceHolderView
 import com.mindorks.placeholderview.SwipeViewBuilder
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.File
 import java.net.URI
 
@@ -66,6 +68,7 @@ class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwi
         return binding.root
     }
 
+    @ExperimentalCoroutinesApi
     @SuppressLint("ClickableViewAccessibility")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -107,19 +110,30 @@ class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwi
                 .setPaddingTop(20)
                 .setRelativeScale(0.01f))
 
-        viewModel.collegeMemories.observe(viewLifecycleOwner, Observer {
+
+        viewModel.collegeMemoriesNetworkResult.observe(viewLifecycleOwner, Observer { networkResult ->
             swipeView.removeAllViews()
-            if (it==null || it.size ==0){
-                binding.noMemoriesTv.text = "No memories found!"
-                binding.noMemoriesTv.visibility = View.VISIBLE
-            } else{
-                for (memory in it){
-                    val card = GraduationCard(requireContext(), memory, this)
-                    swipeView.addView(card)
+            when (networkResult){
+                is NetworkResult.Success -> {
+                    for (memory in networkResult.data as ArrayList<GraduationItem>){
+                        val card = GraduationCard(requireContext(), memory, this)
+                        swipeView.addView(card)
+                    }
+                    binding.graduationMemoriesCl.visibility = View.VISIBLE
+                    binding.noMemoriesTv.visibility = View.GONE
                 }
-                binding.graduationMemoriesCl.visibility = View.VISIBLE
-                binding.noMemoriesTv.visibility = View.GONE
+
+                is NetworkResult.Loading -> {
+                    binding.noMemoriesTv.text = networkResult.message as String
+                    binding.noMemoriesTv.visibility = View.VISIBLE
+                }
+
+                is NetworkResult.Error -> {
+                    binding.noMemoriesTv.text = networkResult.message as String
+                    binding.noMemoriesTv.visibility = View.VISIBLE
+                }
             }
+
             binding.graduationLoadingLl.visibility = View.GONE
             binding.loadingPb.visibility = View.GONE
             binding.refreshBtn.clearAnimation()

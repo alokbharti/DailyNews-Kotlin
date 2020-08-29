@@ -4,15 +4,24 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.alok.dailynews.BuildConfig
 import com.alok.dailynews.models.GraduationItem
+import com.alok.dailynews.utility.NetworkResult
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONArrayRequestListener
 import com.androidnetworking.interfaces.JSONObjectRequestListener
 import com.rx2androidnetworking.Rx2AndroidNetworking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.File
+import java.io.Serializable
 
 class GraduationRepo {
     private val TAG = "GraduationRepo"
@@ -58,8 +67,10 @@ class GraduationRepo {
         return collegList
     }
 
-    fun getCollegeMemories(collegeName:String):MutableLiveData<ArrayList<GraduationItem>>{
-        val graduationMemories = MutableLiveData<ArrayList<GraduationItem>>()
+    @ExperimentalCoroutinesApi
+    fun getCollegeMemoriesNetworkResult(collegeName: String): Flow<NetworkResult<Any>> =
+    callbackFlow{
+        offer(NetworkResult.Loading("Loading memories..."))
         val collegeQuery = JSONObject().put("college", collegeName)
         Rx2AndroidNetworking.get(UPLOAD_URL)
             .addHeaders("content-type","application/json")
@@ -80,22 +91,23 @@ class GraduationRepo {
                                 tempList.add(GraduationItem(title, image))
                             }
                             Log.d(TAG, "memories size: " + tempList.size)
-                            graduationMemories.value = tempList
+                            offer(NetworkResult.Success(tempList))
                         } else {
-                            graduationMemories.value = null
+                            offer(NetworkResult.Error("Unable to fetch data"))
                         }
-                    }catch(e: JSONException){}
+                    }catch(e: JSONException){
+                        offer(NetworkResult.Error(e.localizedMessage))
+                    }
                 }
 
                 override fun onError(anError: ANError?) {
                     if (anError != null) {
-                        Log.d(TAG, anError.message)
+                        offer(NetworkResult.Error("Unable to fetch data"))
                     }
-                    graduationMemories.value = null
                 }
             })
 
-        return graduationMemories
+        awaitClose()
     }
 
     fun addCollegeMemory(file: File, title:String, email:String, college:String){

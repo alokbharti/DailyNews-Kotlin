@@ -4,18 +4,16 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.media.ExifInterface
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.alok.dailynews.models.GraduationItem
+import com.alok.dailynews.utility.NetworkResult
 import kotlinx.coroutines.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
 class GraduationViewModel : ViewModel() {
-    val graduationRepo = GraduationRepo()
+    private val graduationRepo = GraduationRepo()
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main+viewModelJob)
     private val collegeName = MutableLiveData<String>()
@@ -31,8 +29,9 @@ class GraduationViewModel : ViewModel() {
         collegeName.value = college
     }
 
-    val collegeMemories: LiveData<ArrayList<GraduationItem>> = Transformations.switchMap(collegeName){
-        graduationRepo.getCollegeMemories(it)
+    @ExperimentalCoroutinesApi
+    val collegeMemoriesNetworkResult: LiveData<NetworkResult<Any>> = Transformations.switchMap(collegeName){
+        graduationRepo.getCollegeMemoriesNetworkResult(it).asLiveData()
     }
 
     val isMemorySubmitted: LiveData<Boolean> = graduationRepo.isCollegeMemorySubmitted
@@ -69,5 +68,10 @@ class GraduationViewModel : ViewModel() {
             Log.d("GraduationViewModel", "compressed file size: ${f.length()}")
             f
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 }
