@@ -8,7 +8,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
-import android.media.ExifInterface
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI
@@ -16,7 +15,6 @@ import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
@@ -28,10 +26,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.alok.dailygraduation.ui.graduation.GraduationCard
+import com.alok.dailynews.R
 import com.alok.dailynews.databinding.DialogGraduationInfoBinding
 import com.alok.dailynews.databinding.FragmentGraduationBinding
 import com.alok.dailynews.interfaces.OnSwipe
-import com.alok.dailynews.models.GraduationItem
+import com.alok.dailynews.api.responsemodel.GraduationItemResponse
 import com.alok.dailynews.utility.NetworkResult
 import com.alok.dailynews.utility.Utils
 import com.mindorks.placeholderview.SwipeDecor
@@ -39,10 +38,9 @@ import com.mindorks.placeholderview.SwipePlaceHolderView
 import com.mindorks.placeholderview.SwipeViewBuilder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.io.File
-import java.net.URI
 
 
-class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwipe<GraduationItem>{
+class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwipe<GraduationItemResponse>{
 
     private lateinit var swipeView: SwipePlaceHolderView
     private lateinit var viewModel: GraduationViewModel
@@ -84,7 +82,8 @@ class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwi
 
         viewModel.collegeList.observe(viewLifecycleOwner, Observer {
             if (it!=null){
-                arrayAdapter.addAll(it)
+                for (college in it)
+                    arrayAdapter.add(college.name)
             }
         })
 
@@ -115,14 +114,18 @@ class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwi
             swipeView.removeAllViews()
             when (networkResult){
                 is NetworkResult.Success -> {
-                    for (memory in networkResult.data as ArrayList<GraduationItem>){
-                        val card = GraduationCard(requireContext(), memory, this)
-                        swipeView.addView(card)
+                    val data = networkResult.data as ArrayList<GraduationItemResponse>
+                    if (data.size == 0) {
+                        binding.noMemoriesTv.text = getString(R.string.no_memeory)
+                    } else {
+                        for (memory in data) {
+                            val card = GraduationCard(requireContext(), memory, this)
+                            swipeView.addView(card)
+                        }
+                        binding.graduationMemoriesCl.visibility = View.VISIBLE
+                        binding.noMemoriesTv.visibility = View.GONE
                     }
-                    binding.graduationMemoriesCl.visibility = View.VISIBLE
-                    binding.noMemoriesTv.visibility = View.GONE
                 }
-
                 is NetworkResult.Loading -> {
                     binding.noMemoriesTv.text = networkResult.message as String
                     binding.noMemoriesTv.visibility = View.VISIBLE
@@ -252,11 +255,11 @@ class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwi
         }
     }
 
-    override fun onSwipeRight(item: GraduationItem) {
+    override fun onSwipeRight(itemResponse: GraduationItemResponse) {
         totalCardNumber.value = swipeView.allResolvers.size
     }
 
-    override fun onSwipeLeft(item: GraduationItem) {
+    override fun onSwipeLeft(itemResponse: GraduationItemResponse) {
         totalCardNumber.value = swipeView.allResolvers.size
     }
 

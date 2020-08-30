@@ -2,10 +2,10 @@ package com.alok.dailynews.ui.graduation
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.media.ExifInterface
 import android.util.Log
 import androidx.lifecycle.*
-import com.alok.dailynews.models.GraduationItem
+import com.alok.dailynews.api.APIService
+import com.alok.dailynews.api.responsemodel.CollegeListResponse
 import com.alok.dailynews.utility.NetworkResult
 import kotlinx.coroutines.*
 import java.io.ByteArrayOutputStream
@@ -13,31 +13,31 @@ import java.io.File
 import java.io.FileOutputStream
 
 class GraduationViewModel : ViewModel() {
-    private val graduationRepo = GraduationRepo()
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main+viewModelJob)
     private val collegeName = MutableLiveData<String>()
     val compressedFile = MutableLiveData<File>()
 
     init {
-        loadCollegeMemories("IIITDM Jabalpur")
+        loadCollegeMemories("IIITDM Jabalpur") //load data for first college
     }
 
-    val collegeList:LiveData<ArrayList<String>> = graduationRepo.getCollegeList()
+    val collegeList:LiveData<List<CollegeListResponse>> = APIService.getCollegeList()
 
     fun loadCollegeMemories(college: String){
         collegeName.value = college
     }
 
     @ExperimentalCoroutinesApi
-    val collegeMemoriesNetworkResult: LiveData<NetworkResult<Any>> = Transformations.switchMap(collegeName){
-        graduationRepo.getCollegeMemoriesNetworkResult(it).asLiveData()
+    val collegeMemoriesNetworkResult: LiveData<NetworkResult<Any>>
+            = Transformations.switchMap(collegeName){
+        APIService.getCollegeMemoriesNetworkResult(it).asLiveData()
     }
 
-    val isMemorySubmitted: LiveData<Boolean> = graduationRepo.isCollegeMemorySubmitted
+    val isMemorySubmitted: LiveData<Boolean> = APIService.isCollegeMemorySubmitted
 
     fun addCollegeMemory(imageFile:File, email:String, college:String, title:String){
-        graduationRepo.addCollegeMemory(imageFile, title, email, college)
+        APIService.addCollegeMemory(imageFile, title, email, college)
     }
 
     fun getCompressedFile(context: Context, imageFile: Bitmap){
