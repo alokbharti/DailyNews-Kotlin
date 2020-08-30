@@ -4,14 +4,13 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.alok.dailynews.BuildConfig
+import com.alok.dailynews.api.APIService
 import com.alok.dailynews.database.NewsDatabase
 import com.alok.dailynews.database.NewsDatabaseDao
 import com.alok.dailynews.models.LikedNewsItem
 import com.alok.dailynews.models.NewsItem
-import com.alok.dailynews.ui.news.NewsRepo
 import com.alok.dailynews.utility.Utils
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 
 class SharedViewModel(application: Application) : AndroidViewModel(application)  {
 
@@ -19,7 +18,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     private val TAG = "SharedViewModel"
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main+viewModelJob)
-    private val newsRepo: NewsRepo = NewsRepo()
     var newsItemList: MutableLiveData<ArrayList<NewsItem>> = MutableLiveData()
 
     init {
@@ -32,7 +30,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getNewsItemList(imageUrl:String) {
         Log.d(TAG, "in getNewsItemList")
-        newsItemList = newsRepo.getNewsData(imageUrl)
+        newsItemList = APIService.getNewsData(imageUrl)
     }
 
     fun removeSwipedArticle(newsItem: NewsItem){
@@ -75,8 +73,8 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             if (likedNewsItem == null){
                 val tempLikedNewsItem = LikedNewsItem(
                     title = newsItem.title,
-                    description = newsItem.description,
-                    imageUrl = newsItem.imageUrl,
+                    description = newsItem.description?:"",
+                    imageUrl = newsItem.imageUrl?:"",
                     newsUrl = newsItem.newsUrl,
                     newsSourceName = newsItem.newsSourceName,
                     isBookmarked = 1

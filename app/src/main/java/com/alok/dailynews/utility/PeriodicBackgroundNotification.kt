@@ -66,7 +66,7 @@ class PeriodicBackgroundNotification(private val context: Context,
             val title = articleObject.getString("title")
             val desc = articleObject.getString("description")
 
-            newsItem = NewsItem(title, desc, "", "", "", false)
+            newsItem = NewsItem(title, desc, "", "", "")
 
         } else {
             newsItem = null
