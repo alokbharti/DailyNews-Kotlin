@@ -1,10 +1,10 @@
 package com.alok.dailynews.utility
 
-sealed class NetworkResult<out R> {
+sealed class NetworkResult<out T: Any> {
 
-    data class Success<T>(val data: T) : NetworkResult<T>()
+    data class Success(val message: String, val data: Any) : NetworkResult<Any>()
 
-    data class Loading<String>(val message: String) : NetworkResult<String>()
+    data class Loading(val message: String, val data: Any?) : NetworkResult<Any>()
 
-    data class Error<String>(val message: String) : NetworkResult<String>()
+    data class Error(val message: String) : NetworkResult<String>()
 }

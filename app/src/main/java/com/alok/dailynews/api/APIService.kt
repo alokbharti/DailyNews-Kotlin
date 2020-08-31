@@ -93,7 +93,7 @@ object APIService: IAPIService{
     @ExperimentalCoroutinesApi
     override fun getCollegeMemoriesNetworkResult(collegeName: String): Flow<NetworkResult<Any>> =
         callbackFlow{
-            offer(NetworkResult.Loading("Loading memories..."))
+            offer(NetworkResult.Loading("Loading memories...", null))
             val collegeQuery = JSONObject().put("college", collegeName)
             Rx2AndroidNetworking.get(UPLOAD_URL)
                 .addHeaders("content-type","application/json")
@@ -104,7 +104,7 @@ object APIService: IAPIService{
                 .getAsObjectList(GraduationItemResponse::class.java, object: ParsedRequestListener<List<GraduationItemResponse>> {
                     override fun onResponse(response: List<GraduationItemResponse>?) {
                         if (response!=null){
-                            offer(NetworkResult.Success(response))
+                            offer(NetworkResult.Success("Success", response))
                         } else {
                             offer(NetworkResult.Error("Unable to fetch data"))
                         }

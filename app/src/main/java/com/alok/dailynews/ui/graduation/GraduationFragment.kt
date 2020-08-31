@@ -77,7 +77,7 @@ class GraduationFragment : Fragment(), AdapterView.OnItemSelectedListener, OnSwi
             dialog.dismiss()
         }
 
-        arrayAdapter = ArrayAdapter<String>(this.requireContext(), android.R.layout.simple_spinner_item)
+        arrayAdapter = ArrayAdapter(this.requireContext(), android.R.layout.simple_spinner_item)
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         viewModel.collegeList.observe(viewLifecycleOwner, Observer {
